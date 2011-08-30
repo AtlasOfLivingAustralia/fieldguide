@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="ala-fieldguide:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="scalatra-maven-prototype.war">
+      <element id="artifact" artifact-name="ala-fieldguide:war exploded" />
+    </root>
+  </artifact>
+</component>
