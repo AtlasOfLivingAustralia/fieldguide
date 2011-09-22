@@ -47,12 +47,13 @@ class FieldGuideFilter extends ScalatraFilter with ScalateSupport {
       case Some(list) => {
         val jsonMap = list.asInstanceOf[Map[String, Object]]
         val title = jsonMap.getOrElse("title", "Generated field guide").asInstanceOf[String]
+        val link = jsonMap.getOrElse("link", "").asInstanceOf[String]
         val guidList = jsonMap.getOrElse("guids", List()).asInstanceOf[List[String]]
         if (guidList.isEmpty){
           println("No guids supplied")
           response.sendError(400)
         } else {
-          val fileName = FieldGuideGenerator.generateForList(title, guidList)
+          val fileName = FieldGuideGenerator.generateForList(title, link, guidList, servletContext)
           response.setHeader("fileId", fileName)
           response.setStatus(201)
         }
