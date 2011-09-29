@@ -1,6 +1,5 @@
 package au.org.ala
 
-import com.lowagie.text.pdf.PdfWriter
 import java.net.URL
 import java.awt.Color
 import java.util.Date
@@ -11,6 +10,8 @@ import org.apache.commons.httpclient.HttpClient
 import org.apache.commons.httpclient.methods.PostMethod
 import javax.servlet.ServletContext
 import org.apache.commons.io.IOUtils
+import com.lowagie.text.pdf.{PdfStream, PdfWriter}
+
 //import org.scalatest.mock.MockitoSugar
 //import org.mockito.Mockito._
 import java.io.{FileInputStream, File, FileOutputStream}
@@ -72,8 +73,14 @@ object FieldGuideGenerator {
 
     val file = new File(outputDir + filePath)
     val fout = new FileOutputStream(file)
+    com.lowagie.text.Document.compress = true
     val document = new com.lowagie.text.Document()
-    PdfWriter.getInstance(document, fout)
+    val pdfWriter = PdfWriter.getInstance(document, fout)
+    pdfWriter.setFullCompression()
+    pdfWriter.setStrictImageSequence(true)
+    pdfWriter.setLinearPageMode()
+    pdfWriter.setCompressionLevel(PdfStream.BEST_COMPRESSION)
+
     document.addTitle("Field guide produced by ALA using aggregated sources")
     document.addSubject("Field guide produced by ALA - " + queryName)
     document.addCreator("Atlas of Living Australia")
@@ -133,6 +140,7 @@ object FieldGuideGenerator {
             heightTotal = 0.0f
           }
 
+          //http://bie.ala.org.au/species/info/Falconidae.json
           //lookup the family common name
           val p = new Paragraph(familyName, SMALL_HDR)
           p.setIndentationLeft(5.0f)
@@ -155,20 +163,23 @@ object FieldGuideGenerator {
             val (cells, height) = createCellsForTaxon(taxonProfile)
 
             println("pageNo: " + pageNo +", total height: " + heightTotal+", next image: " + height +", count for page: " + countForPage)
-            if (pageNo == 1 && countForPage == 2){
+            if (countForPage == 2){
               document.newPage
               countForPage = 0
               pageNo += 1
               heightTotal = 0.0f
-            } else if(countForPage == 3 || (heightTotal + height) > 1200.0f){
-              document.newPage
-              countForPage = 0
-              pageNo += 1
-              heightTotal = 0.0f
+//            } else if(countForPage == 3 || (heightTotal + height) > 1200.0f){
+//              document.newPage
+//              countForPage = 0
+//              pageNo += 1
+//              heightTotal = 0.0f
             }
 
             //add the cells
             val table = createTable
+            table.setAlignment(0)
+            //table.setBorderWidthBottom(1.0f)
+            table.setTableFitsPage(true)
             cells.foreach(cell => table.addCell(cell))
             document.add(table)
 
@@ -238,6 +249,10 @@ object FieldGuideGenerator {
           image.scaleAbsoluteWidth(400)
         }
 
+        image.setDeflated(true)
+        image.setCompressionLevel(9)
+
+        imageCell.setVerticalAlignment(0)
         imageCell.add(image)
         imageHeight = image.getHeight()
       } catch {
@@ -256,6 +271,7 @@ object FieldGuideGenerator {
     val namesCell = new Cell
     //val namesCell = imageCell
     namesCell.setWidth(300.0f)
+    namesCell.setVerticalAlignment(0)
     namesCell.setBorder(0)
     namesCell.setVerticalAlignment(Element.ALIGN_TOP)
 
@@ -328,13 +344,15 @@ object FieldGuideGenerator {
     attribution.add(taxonAnchor)
 
     //add image attribution
-    val imageSourceUrl = taxonProfile.getOrElse("imageInfosourceURL", "").asInstanceOf[String]
-    attribution.add(new Phrase("Image sourced from: ", NORMAL_TEXT))
-    val imageSourceAnchor = new Anchor(new Phrase(taxonProfile.getOrElse("imageInfosourceName", "") +"\n", LINK_FONT))
-    imageSourceAnchor.setName("LINK")
-    imageSourceAnchor.setReference(imageSourceUrl)
-    imageSourceAnchor.setFont(LINK_FONT);
-    attribution.add(imageSourceAnchor)
+    if (taxonProfile.getOrElse("imageInfosourceName", "") != null){
+      val imageSourceUrl = taxonProfile.getOrElse("imageInfosourceURL", "").asInstanceOf[String]
+      attribution.add(new Phrase("Image sourced from: ", NORMAL_TEXT))
+      val imageSourceAnchor = new Anchor(new Phrase(taxonProfile.getOrElse("imageInfosourceName", "") +"\n", LINK_FONT))
+      imageSourceAnchor.setName("LINK")
+      imageSourceAnchor.setReference(imageSourceUrl)
+      imageSourceAnchor.setFont(LINK_FONT);
+      attribution.add(imageSourceAnchor)
+    }
 
     //add image attribution
     if (taxonProfile.getOrElse("imageCreator", null) != null){
