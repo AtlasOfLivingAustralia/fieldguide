@@ -39,7 +39,7 @@ object FieldGuideGenerator {
 
   def createTable = {
     val table = new Table(2);
-    table.setWidths(Array(300,500))
+    //table.setWidths(Array(300,500))
     table.setBorderWidth(0.0f);
     table.setBorder(1)
     table.setPadding(5.0f)
@@ -163,6 +163,20 @@ object FieldGuideGenerator {
             val (cells, height) = createCellsForTaxon(taxonProfile)
 
             println("pageNo: " + pageNo +", total height: " + heightTotal+", next image: " + height +", count for page: " + countForPage)
+
+            if (countForPage == 1 && pageNo == 1){
+              document.newPage
+              countForPage = 0
+              pageNo += 1
+              heightTotal = 0.0f
+//            } else if(countForPage == 3 || (heightTotal + height) > 1200.0f){
+//              document.newPage
+//              countForPage = 0
+//              pageNo += 1
+//              heightTotal = 0.0f
+            }
+
+
             if (countForPage == 2){
               document.newPage
               countForPage = 0
@@ -230,9 +244,9 @@ object FieldGuideGenerator {
 
     //retrieve images 1 or more images
     val imageCell = new Cell()
-    imageCell.setWidth(500.0f)
+   // imageCell.setWidth(500.0f)
     imageCell.setBorder(0)
-    imageCell.setTop(0.0f)
+    //imageCell.setTop(0.0f)
     imageCell.setVerticalAlignment(Element.ALIGN_TOP)
     var imageHeight = 150.0f
     var noImageavailable = false
@@ -242,17 +256,18 @@ object FieldGuideGenerator {
       try {
         val imageUrl = taxonProfile.getOrElse("imageURL", "")
         //val repoLocation = taxonProfile.getOrElse("imageURL","")
-        //val imageUrl = repoLocation.replace("raw", "thumbnail")
-        val image = com.lowagie.text.Image.getInstance(new URL(imageUrl))
+        val imageUrl2 = imageUrl.replace("raw", "smallRaw")
+        println(imageUrl2)
+        val image = com.lowagie.text.Image.getInstance(new URL(imageUrl2))
 
-        if(image.getWidth > 400){
-          image.scaleAbsoluteWidth(400)
-        }
+//        if(image.getWidth > 400){
+//          image.scaleAbsoluteWidth(400)
+//        }
 
-        image.setDeflated(true)
-        image.setCompressionLevel(9)
+        //image.setDeflated(true)
+        //image.setCompressionLevel(9)
 
-        imageCell.setVerticalAlignment(0)
+        //imageCell.setVerticalAlignment(0)
         imageCell.add(image)
         imageHeight = image.getHeight()
       } catch {
@@ -270,7 +285,7 @@ object FieldGuideGenerator {
 
     val namesCell = new Cell
     //val namesCell = imageCell
-    namesCell.setWidth(300.0f)
+    //namesCell.setWidth(300.0f)
     namesCell.setVerticalAlignment(0)
     namesCell.setBorder(0)
     namesCell.setVerticalAlignment(Element.ALIGN_TOP)
