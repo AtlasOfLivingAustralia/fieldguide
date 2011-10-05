@@ -124,7 +124,12 @@ object FieldGuideGenerator {
       val unsortedProfiles = taxonProfiles.get.asInstanceOf[List[Map[String, String]]]
 
       //split the profiles by family
-      val groupedProfiles = unsortedProfiles.groupBy(map => map.getOrElse("family", ""))
+      val groupedProfiles = unsortedProfiles.groupBy(map => {
+        map.getOrElse("family", "") match {
+          case null => ""
+          case x => x
+        }
+      })
 
       var familyNamesSorted = groupedProfiles.keySet.toIndexedSeq.sorted
 
