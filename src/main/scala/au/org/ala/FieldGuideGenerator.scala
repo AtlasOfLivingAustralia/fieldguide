@@ -17,13 +17,13 @@ import com.lowagie.text.pdf.{PdfStream, PdfWriter}
 import java.io.{FileInputStream, File, FileOutputStream}
 import com.lowagie.text.{Phrase, Anchor,Paragraph, Font, Table, Cell, Chunk,Section,Element}
 
-//object FieldGuideGeneratorTest {
-//
-//  def main(args: Array[String]) {
-//    val guids = scala.io.Source.fromFile("/data/birdlist.txt").getLines().toList
-//    FieldGuideGenerator.generateForList("My Birds",  "http://biocache.ala.org.au/occurrences/taxa/urn:lsid:biodiversity.org.au:afd.taxon:9bd1eeed-c14f-4372-91bd-d0d5f2d2e909", guids)
-//  }
-//}
+object FieldGuideGeneratorTest {
+
+  def main(args: Array[String]) {
+    val guids = scala.io.Source.fromFile("/data/test.txt").getLines().toList
+    FieldGuideGenerator.generateForList("My Birds",  "http://biocache.ala.org.au/occurrences/taxa/urn:lsid:biodiversity.org.au:afd.taxon:9bd1eeed-c14f-4372-91bd-d0d5f2d2e909", guids)
+  }
+}
 
 object FieldGuideGenerator {
 
@@ -56,7 +56,7 @@ object FieldGuideGenerator {
     //do a HTTP request to
     val guidsAsString = JSONArray(guids).toString()
     val http = new HttpClient()
-    val post = new PostMethod(bieUrl + "/species/fieldGuides")
+    val post = new PostMethod(bieUrl + "/ws/species/fieldGuides")
     post.setRequestBody(guidsAsString)
     http.executeMethod(post)
     val taxonProfiles = JSON.parseFull(post.getResponseBodyAsString)
@@ -90,8 +90,8 @@ object FieldGuideGenerator {
     document.open
 
     //add the header image
-    //val inputStream = new FileInputStream(new File("/Users/davejmartin2/dev/ala-fieldguide/src/main/webapp/WEB-INF/images/fieldguide-header.jpg"));
-    val inputStream = ctx.getResourceAsStream("/WEB-INF/images/fieldguide-header.jpg");
+    val inputStream = new FileInputStream(new File("/Users/davemartin/dev/ala-fieldguide/src/main/webapp/WEB-INF/images/fieldguide-header.jpg"));
+//    val inputStream = ctx.getResourceAsStream("/WEB-INF/images/fieldguide-header.jpg");
     val imageFile = IOUtils.toByteArray(inputStream)
     val headerImage = com.lowagie.text.Image.getInstance(imageFile)
     headerImage.scaleToFit(600.0f, 144f)
@@ -263,14 +263,7 @@ object FieldGuideGenerator {
         //val repoLocation = taxonProfile.getOrElse("imageURL","")
         val imageUrl2 = imageUrl.replace("raw", "smallRaw")
         println(imageUrl2)
-        val image = com.lowagie.text.Image.getInstance(new URL(imageUrl2))
-
-//        if(image.getWidth > 400){
-//          image.scaleAbsoluteWidth(400)
-//        }
-
-        //image.setDeflated(true)
-        //image.setCompressionLevel(9)
+        val image = com.lowagie.text.Image.getInstance(new URL(imageUrl))
 
         //imageCell.setVerticalAlignment(0)
         imageCell.add(image)
@@ -333,10 +326,12 @@ object FieldGuideGenerator {
     anchor.setFont(LINK_FONT);
     namesCell.add(anchor)
 
-    val rowHeight = imageCell.getHeight > namesCell.getHeight match {
-      case true => imageCell.getHeight
-      case false => namesCell.getHeight
-    }
+//    val rowHeight = imageCell.getHeight > namesCell.getHeight match {
+//      case true => imageCell.getHeight
+//      case false => namesCell.getHeight
+//    }
+
+    val rowHeight = 100.0f
 
     if (noImageavailable){
       (List(namesCell), rowHeight)
