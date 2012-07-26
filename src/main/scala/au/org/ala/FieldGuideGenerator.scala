@@ -90,7 +90,7 @@ object FieldGuideGenerator {
     document.open
 
     //add the header image
-    //val inputStream = new FileInputStream(new File("/Users/davemartin/dev/ala-fieldguide/src/main/webapp/WEB-INF/images/fieldguide-header.jpg"));
+//    val inputStream = new FileInputStream(new File("/Users/davemartin/dev/ala-fieldguide/src/main/webapp/WEB-INF/images/fieldguide-header.jpg"));
     val inputStream = ctx.getResourceAsStream("/WEB-INF/images/fieldguide-header.jpg");
     val imageFile = IOUtils.toByteArray(inputStream)
     val headerImage = com.lowagie.text.Image.getInstance(imageFile)
@@ -259,7 +259,8 @@ object FieldGuideGenerator {
         val imageUrl = taxonProfile.getOrElse("imageURL", "")
         //val repoLocation = taxonProfile.getOrElse("imageURL","")
         val imageUrl2 = imageUrl.replace("raw", "smallRaw")
-        val image = com.lowagie.text.Image.getInstance(new URL(imageUrl))
+        val image = com.lowagie.text.Image.getInstance(new URL(imageUrl2))
+        //image.setCompressionLevel(100)
         //imageCell.setVerticalAlignment(0)
         imageCell.add(image)
         imageHeight = image.getHeight()
