@@ -29,11 +29,11 @@ object FieldGuideGenerator {
 
   val bieUrl = "http://bie.ala.org.au"
   val outputDir = "/data/fieldguides/"
-  val LINK_FONT = new Font(Font.HELVETICA, 12, Font.UNDERLINE, new Color(0, 0, 255))
-  val GREY_LINK_FONT = new Font(Font.HELVETICA, 12, Font.ITALIC, new Color(128,128,128))
+  val LINK_FONT = new Font(Font.HELVETICA, 11, Font.UNDERLINE, new Color(0, 0, 255))
+  val GREY_LINK_FONT = new Font(Font.HELVETICA, 11, Font.ITALIC, new Color(128,128,128))
   val SMALL_HDR = new Font(Font.HELVETICA, 18, Font.BOLD, new Color(0, 0, 0))
-  val SCI_NAME = new Font(Font.HELVETICA, 12, Font.ITALIC, new Color(0, 0, 0))
-  val NORMAL_TEXT = new Font(Font.HELVETICA, 12, Font.NORMAL, new Color(0, 0, 0))
+  val SCI_NAME = new Font(Font.HELVETICA, 11, Font.ITALIC, new Color(0, 0, 0))
+  val NORMAL_TEXT = new Font(Font.HELVETICA, 11, Font.NORMAL, new Color(0, 0, 0))
 
   def getCurrentDay = DateFormatUtils.format(new Date(), "ddMMyyyy")
 
@@ -90,8 +90,8 @@ object FieldGuideGenerator {
     document.open
 
     //add the header image
-  //  val inputStream = new FileInputStream(new File("/Users/davemartin/dev/ala-fieldguide/src/main/webapp/WEB-INF/images/fieldguide-header.jpg"));
-    val inputStream = ctx.getResourceAsStream("/WEB-INF/images/fieldguide-header.jpg");
+    val inputStream = new FileInputStream(new File("/Users/davemartin/dev/ala-fieldguide/src/main/webapp/WEB-INF/images/fieldguide-header.jpg"));
+  //  val inputStream = ctx.getResourceAsStream("/WEB-INF/images/fieldguide-header.jpg");
     val imageFile = IOUtils.toByteArray(inputStream)
     val headerImage = com.lowagie.text.Image.getInstance(imageFile)
     headerImage.scaleToFit(600.0f, 144f)
@@ -148,8 +148,9 @@ object FieldGuideGenerator {
           //http://bie.ala.org.au/species/info/Falconidae.json
           //lookup the family common name
           val p = new Paragraph(familyName, SMALL_HDR)
-          p.setIndentationLeft(5.0f)
+          p.setIndentationLeft(0.0f)
           p.setSpacingBefore(20.0f)
+          p.setSpacingAfter(20.0f)
 //          counter == 0 match {
 //            case true => p.setSpacingBefore(150.0f)
 //            case false => p.setSpacingBefore(20.0f)
@@ -165,7 +166,7 @@ object FieldGuideGenerator {
 
           sortedProfiles.foreach(taxonProfile => {
 
-            val (cells, height) = createCellsForTaxon(taxonProfile)
+            val (paragraph, cells, height) = createCellsForTaxon(taxonProfile)
 
             println("pageNo: " + pageNo +", total height: " + heightTotal+", next image: " + height +", count for page: " + countForPage)
 
@@ -174,24 +175,13 @@ object FieldGuideGenerator {
               countForPage = 0
               pageNo += 1
               heightTotal = 0.0f
-//            } else if(countForPage == 3 || (heightTotal + height) > 1200.0f){
-//              document.newPage
-//              countForPage = 0
-//              pageNo += 1
-//              heightTotal = 0.0f
             }
-
 
             if (countForPage == 2){
               document.newPage
               countForPage = 0
               pageNo += 1
               heightTotal = 0.0f
-//            } else if(countForPage == 3 || (heightTotal + height) > 1200.0f){
-//              document.newPage
-//              countForPage = 0
-//              pageNo += 1
-//              heightTotal = 0.0f
             }
 
             //add the cells
@@ -199,7 +189,14 @@ object FieldGuideGenerator {
             table.setAlignment(0)
             //table.setBorderWidthBottom(1.0f)
             table.setTableFitsPage(true)
+            table.setPadding(2.0f)
+            table.setSpacing(0)
+
             cells.foreach(cell => table.addCell(cell))
+            paragraph.setSpacingAfter(0)
+            paragraph.setSpacingBefore(20.0f)
+
+            document.add(paragraph)
             document.add(table)
 
             heightTotal += height
@@ -245,7 +242,7 @@ object FieldGuideGenerator {
     }
   }
 
-  def createCellsForTaxon(taxonProfile: Map[String, String]): (List[Cell], Float) = {
+  def createCellsForTaxon(taxonProfile: Map[String, String]): (Paragraph, List[Cell], Float) = {
 
     //retrieve images 1 or more images
     val imageCell = new Cell()
@@ -253,7 +250,7 @@ object FieldGuideGenerator {
     imageCell.setBorder(0)
     //imageCell.setTop(0.0f)
     imageCell.setVerticalAlignment(Element.ALIGN_TOP)
-    var imageHeight = 150.0f
+    var imageHeight = 100.0f
     var noImageavailable = false
 
     if (!taxonProfile.get("thumbnail").isEmpty && taxonProfile.getOrElse("thumbnail", "") != null) {
@@ -262,12 +259,11 @@ object FieldGuideGenerator {
         val imageUrl = taxonProfile.getOrElse("imageURL", "")
         //val repoLocation = taxonProfile.getOrElse("imageURL","")
         val imageUrl2 = imageUrl.replace("raw", "smallRaw")
-        println(imageUrl2)
         val image = com.lowagie.text.Image.getInstance(new URL(imageUrl))
-
         //imageCell.setVerticalAlignment(0)
         imageCell.add(image)
         imageHeight = image.getHeight()
+        imageCell.setWidth(80.0f)
       } catch {
         case e: Exception => {
           e.printStackTrace()
@@ -281,29 +277,51 @@ object FieldGuideGenerator {
       //imageCell.add(new Chunk("No Image available"))
     }
 
+//    val distribCell = new Cell()
+//    distribCell.setBorder(0)
+//    distribCell.setVerticalAlignment(Element.ALIGN_TOP)
+//    val distribImage = com.lowagie.text.Image.getInstance(new URL("http://biocache.ala.org.au/ws/density/map?q=lsid:%22" + taxonProfile.getOrElse("guid", "") + "%22%20AND%20geospatial_kosher:true"))
+//    distribCell.add(distribImage)
+//    distribCell.setWidth(60.0f)
+
+
+    val paragraph = new Paragraph()
+    paragraph.setSpacingBefore(0.0f)
+    paragraph.setSpacingAfter(0.0f)
+    paragraph.setLeading(8.0f)
     val namesCell = new Cell
     //val namesCell = imageCell
     //namesCell.setWidth(300.0f)
-    namesCell.setVerticalAlignment(0)
+   // namesCell.setVerticalAlignment(0)
     namesCell.setBorder(0)
     namesCell.setVerticalAlignment(Element.ALIGN_TOP)
+    namesCell.setWidth(50.0f)
+
 
     //common name
     val commonName = taxonProfile.getOrElse("commonName", "").asInstanceOf[String]
     if (commonName != null && commonName != "") {
       //table.addCell(commonName)
-      val commonNameChunk = new Paragraph(commonName.trim + "\n", new Font(Font.HELVETICA, 12, Font.BOLD, new Color(0, 0, 0)))
+      val commonNameChunk = new Paragraph(commonName.trim + "\n", new Font(Font.HELVETICA, 11, Font.BOLD, new Color(0, 0, 0)))
       commonNameChunk.setIndentationLeft(0.0f)
       commonNameChunk.setFirstLineIndent(0.0f)
+      commonNameChunk.setSpacingAfter(0.0f)
+      commonNameChunk.setSpacingBefore(0.0f)
 
-      namesCell.add(commonNameChunk)
+      paragraph.add(commonNameChunk)
     }
 
     //add scientific name
     val scientificName = taxonProfile.getOrElse("scientificName", "").asInstanceOf[String]
     val scientificNameChunk = new Paragraph(scientificName + "\n", SCI_NAME)
-    namesCell.add(scientificNameChunk)
-//
+    scientificNameChunk.setSpacingAfter(0.0f)
+    scientificNameChunk.setSpacingBefore(0.0f)
+    paragraph.add(scientificNameChunk)
+
+    val distribImage = com.lowagie.text.Image.getInstance(new URL("http://biocache.ala.org.au/ws/density/map?q=lsid:%22" + taxonProfile.getOrElse("guid", "") + "%22%20AND%20geospatial_kosher:true"))
+    namesCell.addElement(distribImage)
+
+
 //    //add family name
 //    val familyName = taxonProfile.getOrElse("family", "").asInstanceOf[String]
 //    val familyChunk = new Chunk("Family: " + familyName + "\n", NORMAL_TEXT)
@@ -315,16 +333,16 @@ object FieldGuideGenerator {
 
     //add image attribution
     if (taxonProfile.getOrElse("imageCreator", null) != null){
-      namesCell.add(new Phrase("Image by: " + taxonProfile.getOrElse("imageCreator", "") + "\n" , NORMAL_TEXT))
+    //  namesCell.add(new Phrase("Image by: " + taxonProfile.getOrElse("imageCreator", "") + "\n" , NORMAL_TEXT))
     }
 
     //add anchor
     val guid = taxonProfile.getOrElse("guid", "").asInstanceOf[String]
-    val anchor = new Anchor(new Phrase("ALA species page", LINK_FONT))
-    anchor.setName("LINK")
-    anchor.setReference("http://bie.ala.org.au/species/" + guid)
-    anchor.setFont(LINK_FONT);
-    namesCell.add(anchor)
+//    val anchor = new Anchor(new Phrase("ALA species page", LINK_FONT))
+//    anchor.setName("LINK")
+//    anchor.setReference("http://bie.ala.org.au/species/" + guid)
+//    anchor.setFont(LINK_FONT);
+//    namesCell.add(anchor)
 
 //    val rowHeight = imageCell.getHeight > namesCell.getHeight match {
 //      case true => imageCell.getHeight
@@ -334,9 +352,9 @@ object FieldGuideGenerator {
     val rowHeight = 100.0f
 
     if (noImageavailable){
-      (List(namesCell), rowHeight)
+      (paragraph, List(namesCell), rowHeight)
     } else {
-      (List(namesCell,imageCell), rowHeight)
+      (paragraph, List(imageCell,namesCell), rowHeight)
     }
     //(List(imageCell), rowHeight)
   }
