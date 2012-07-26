@@ -90,8 +90,8 @@ object FieldGuideGenerator {
     document.open
 
     //add the header image
-    val inputStream = new FileInputStream(new File("/Users/davemartin/dev/ala-fieldguide/src/main/webapp/WEB-INF/images/fieldguide-header.jpg"));
-  //  val inputStream = ctx.getResourceAsStream("/WEB-INF/images/fieldguide-header.jpg");
+    //val inputStream = new FileInputStream(new File("/Users/davemartin/dev/ala-fieldguide/src/main/webapp/WEB-INF/images/fieldguide-header.jpg"));
+    val inputStream = ctx.getResourceAsStream("/WEB-INF/images/fieldguide-header.jpg");
     val imageFile = IOUtils.toByteArray(inputStream)
     val headerImage = com.lowagie.text.Image.getInstance(imageFile)
     headerImage.scaleToFit(600.0f, 144f)
