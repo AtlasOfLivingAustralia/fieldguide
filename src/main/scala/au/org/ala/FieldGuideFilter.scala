@@ -13,7 +13,7 @@ class FieldGuideFilter extends ScalatraFilter with ScalateSupport {
       <body>
         <h1>Field Guide Generator</h1>
         <p>
-          HTTP POST an array of GUIDs to /getFieldGuide to generate a field guide
+          HTTP POST an array of GUIDs to /generate to generate a field guide
         </p>
         <p><textarea rows="8" cols="120"><![CDATA[
           {
@@ -35,7 +35,7 @@ class FieldGuideFilter extends ScalatraFilter with ScalateSupport {
           </textarea>
         </p>
         <p> A URL to download can then be constructed.
-          e.g http://..../generatedGuide/30Aug2011/fieldguide1314682018564.pdf
+          e.g /guide/30082011/fieldguide1314682018564.pdf
         </p>
       </body>
     </html>
