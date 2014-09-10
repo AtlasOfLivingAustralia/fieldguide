@@ -1,0 +1,78 @@
+/* FONT STACK */
+body {
+	font-family: Helvetica;
+}
+
+html * {
+	margin: 0;
+}
+
+/* Top link */
+a {
+    font-style: italic;
+    font-size: 14px;
+    color: gray;
+    margin-left: 30px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+/* Family */
+h2 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+
+/* Common name */
+h3 {
+    font-size: 11px;
+    font-weight: bold;
+}
+
+/* Scientific name */
+h4 {
+    font-size: 11px;
+    font-weight: normal;
+    font-style: italic;
+}
+
+/* Attribution title */
+h1 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    margin-left: 30px;
+    page-break-before: always;
+}
+
+/* Attribution details */
+h5 {
+    font-size: 11px;
+    font-weight: normal;
+    margin-top: 4px;
+}
+
+/* Attribution links */
+h5 > a {
+    color: blue;
+    text-decoration: underline;
+    font-size: 11px;
+    font-weight: normal;
+    font-style: normal;
+    margin-left: 0px;
+}
+
+/* taxon images */
+div > img {
+    margin-top: 10px;
+    vertical-align: text-top;
+    margin-left: 30px;
+    width: 35%;
+}
+
+div {
+    margin-top: 15px;
+    margin-left: 30px;
+    page-break-inside: avoid;
+}
