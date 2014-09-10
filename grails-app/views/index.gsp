@@ -7,7 +7,7 @@
         <h1>Field Guide Generator</h1>
 
         <p>
-            HTTP POST an array of GUIDs to /generate to generate a field guide
+            HTTP POST an array of GUIDs to /generate to generate a field guide.  Include in request header, Content-Type: application/json
         </p>
 
         <p>
