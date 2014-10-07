@@ -1,3 +1,4 @@
+### fieldguide   [![Build Status](https://travis-ci.org/AtlasOfLivingAustralia/fieldguide.svg?branch=master)](https://travis-ci.org/AtlasOfLivingAustralia/fieldguide)
 #ALA Fieldguide
 A webservice that generates PDF field guides for a list of species.
 
