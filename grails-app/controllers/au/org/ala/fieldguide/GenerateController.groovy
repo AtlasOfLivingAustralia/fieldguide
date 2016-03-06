@@ -87,7 +87,9 @@ class GenerateController {
         def json = new JsonSlurper().parseText(string)
 
         def url = grailsApplication.config.service.bie.ws.url + "/species/fieldGuides"
-        String guidsAsString = (json.getAt("guids") as JSONArray).toString()
+        def list = (json.getAt("guids") as JSONArray)
+        list.remove("")
+        String guidsAsString = list.toString()
 
         log.debug "get fieldGuide info from bie\nURL: " + url + "\nPOST body: " + guidsAsString
 
