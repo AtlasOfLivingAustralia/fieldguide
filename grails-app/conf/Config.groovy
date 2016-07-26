@@ -150,3 +150,5 @@ log4j.main = {
             'grails.app.services',
             'grails.web.pages'
 }
+
+grails.cache.enabled = true

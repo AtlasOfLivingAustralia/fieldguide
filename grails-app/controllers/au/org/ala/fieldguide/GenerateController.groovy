@@ -11,6 +11,9 @@ import org.apache.commons.httpclient.methods.PostMethod
 
 class GenerateController {
 
+    def imageService
+    def collectionsService
+
     def index() {
 
         JSON json = request.JSON;
@@ -86,7 +89,7 @@ class GenerateController {
         String string = FileUtils.readFileToString(new File(outputDir + id + ".json"))
         def json = new JsonSlurper().parseText(string)
 
-        def url = grailsApplication.config.service.bie.ws.url + "/species/fieldGuides"
+        def url = grailsApplication.config.service.bie.ws.url + "/species/guids/bulklookup"
         def list = (json.getAt("guids") as JSONArray)
         list.remove("")
         String guidsAsString = list.toString()
@@ -108,11 +111,31 @@ class GenerateController {
         //UTF-8 encoding errors removal
         text = text.replaceAll( "([\\ufffd])", "");
 
-        def taxonProfiles = new JsonSlurper().parseText(text)
+        def taxonProfilesAll = new JsonSlurper().parseText(text).searchDTOList
+        def taxonProfiles = []
+
+        //add image metadata
+        taxonProfilesAll.each { taxon ->
+            if (taxon) {
+                if (taxon.largeImageUrl) {
+                    def imageMetadata = imageService.getInfo(taxon.largeImageUrl)
+                    taxon.imageCreator = imageMetadata?.creator
+                    taxon.imageDataResourceUid = imageMetadata?.dataResourceUid
+                    taxon.imageRights = imageMetadata?.rights
+
+                    if (taxon?.imageDataResourceUid) {
+                        def imageDataResourceMetadata = collectionsService.getInfo(taxon.imageDataResourceUid)
+                        taxon.imageDataResourceUrl = imageDataResourceMetadata.websiteUrl
+                        taxon.imageDataResourceName = imageDataResourceMetadata.name
+                    }
+                }
+                taxonProfiles.add(taxon)
+            }
+        }
 
        //group sort bie output
         def taxonGroupedSorted = taxonProfiles.groupBy (
-            [ { it.family ? it.family : "" } , { it.commonName ? it.commonName : "" } ]
+                [{ it.family ? it.family : "" }, { it.commonNameSingle ? it.commonNameSingle : "" }]
         ).sort { a, b ->
             a.key ? b.key ? a.key <=> b.key : 1 : b.key ? -1 : 0
         }
@@ -130,5 +153,12 @@ class GenerateController {
         [
             data: map
         ]
+    }
+
+    def clearCache() {
+        collectionsService.clearCache()
+        imageService.clearCache()
+
+        render [:] as JSON
     }
 }

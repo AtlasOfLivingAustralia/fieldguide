@@ -23,8 +23,8 @@
                             <h3>${commonName.key}</h3>
                         </g:if>
                         <h4>${taxon.scientificName}</h4>
-                        <g:if test="${taxon.imageURL != null}">
-                            <img src="${taxon.imageURL.replace('raw','smallRaw')}" />
+                        <g:if test="${taxon.largeImageUrl != null}">
+                            <img src="${taxon.largeImageUrl.replace('raw', 'smallRaw')}"/>
                         </g:if>
                         <img src=" ${grailsApplication.config.service.biocache.ws.url}/density/map?q=lsid:%22${taxon.guid}%22%20AND%20geospatial_kosher:true" width="30%"/>
                     </div>
@@ -38,14 +38,19 @@
                 <g:each var="taxon" in="${commonName.value}" status="j">
                     <div>
                         <h4>${taxon.scientificName}</h4>
-                        <g:if test="${ taxon.taxonInfosourceName }">
-                            <h5>Taxonomic information supplied by: <a href="${taxon.taxonInfosourceURL}">${taxon.taxonInfosourceName}</a></h5>
+                        <g:if test="${taxon.datasetName}">
+                            <h5>Taxonomic information supplied by: <a
+                                    href="${grailsApplication.config.collections.url + '/public/show/' + taxon.datasetID}">${taxon.datasetName}</a>
+                            </h5>
                         </g:if>
-                        <g:if test="${ taxon.taxonInfosourceName }">
-                            <h5>Image sourced from: <a href="${taxon.imageInfosourceURL}">${taxon.imageInfosourceName}</a></h5>
+                        <g:if test="${taxon.imageDataResourceURL}">
+                            <h5>Image sourced from: <a
+                                    href="${taxon.imageDataResourceURL}">${taxon.imageDataResourceName}</a></h5>
                         </g:if>
                         <g:if test="${ taxon.imageCreator }">
-                            <h5>Image by: <a href="${taxon.imageisPartOf}">${taxon.imageCreator}</a></h5>
+                            <h5>Image by: <a
+                                    href="${grailsApplication.config.collections.url + '/public/show/' + taxon.imageDataResourceUid}">${taxon.imageCreator}</a>
+                            </h5>
                         </g:if>
                         <g:if test="${ taxon.imageRights }">
                             <h5>Image rights: ${taxon.imageRights}</h5>
