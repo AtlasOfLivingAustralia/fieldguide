@@ -60,5 +60,7 @@ grails.project.dependency.resolution = {
         // plugins for the compile step
         compile ':cache:1.1.1'
         compile ":cache-ehcache:1.0.0"
+        compile ":mail:1.0.1"
+        runtime ":cors:1.3.0"
     }
 }

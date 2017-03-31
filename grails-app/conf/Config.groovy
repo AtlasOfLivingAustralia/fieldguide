@@ -103,12 +103,25 @@ grails.hibernate.osiv.readonly = false
 environments {
     development {
         grails.resources.debug = true // cache & resources plugins
+        grails {
+            mail {
+                host = "localhost"
+                port = 1025
+                username = email.from
+            }
+        }
     }
     test {
 
     }
     production {
-
+        grails {
+            mail {
+                host = "localhost"
+                port = 25
+                username = email.from
+            }
+        }
     }
 }
 
@@ -152,3 +165,11 @@ log4j.main = {
 }
 
 grails.cache.enabled = true
+
+threadPoolSize = 4
+
+email.text.from = 'supports@ala.org.au'
+
+email.enabled = true
+
+fieldguide.url='http://fieldguide.ala.org.au'
