@@ -24,9 +24,9 @@
                         </g:if>
                         <h4>${taxon.scientificName}</h4>
                         <g:if test="${taxon.largeImageUrl != null}">
-                            <img src="${taxon.largeImageUrl.replace('raw', 'smallRaw')}"/>
+                            <img src="${taxon.thumbnail}"/>
                         </g:if>
-                        <img src=" ${grailsApplication.config.service.biocache.ws.url}/density/map?q=lsid:%22${taxon.guid}%22%20AND%20geospatial_kosher:true" width="30%"/>
+                        <img src="${taxon.densitymap}" width="30%"/>
                     </div>
                 </g:each>
             </g:each>

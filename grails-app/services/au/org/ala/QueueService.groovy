@@ -46,12 +46,12 @@ class QueueService {
     def emailSuccess(Map request) {
         TimeZone.setDefault(TimeZone.getTimeZone(grailsApplication.config.timezone ?: "Australia/Canberra"))
 
-        String txt = (grailsApplication.config.email.text.success ?: "Your download is available on the URL:" +
+        String contents = (grailsApplication.config.email.text.success ?: "Your download is available on the URL:" +
                 "<br><br>[url]<br><br>When using this field guide please use the following citation:" +
                 "<br><br><cite>Atlas of Living Australia field guide generated from [query] accessed on [date]." +
                 "</cite><br><br>More information can be found at " +
                 "<a href='http://www.ala.org.au/about-the-atlas/terms-of-use/citing-the-atlas/'>citing the ALA</a>.<br><br>")
-                .replace("[url]", request.downloadUrl).replace("[date]", new Date().toString()).replace("[query]", request.data.link)
+                .replace("[url]", request.downloadUrl).replace("[date]", new Date().toString()).replace("[query]", request?.data?.link ?: "")
 
         String title = (grailsApplication.config.email.subject.success ?: "ALA Field Guide Download Complete - [filename]")
                 .replace("[filename]", request.fileRef)
@@ -61,13 +61,13 @@ class QueueService {
                 from grailsApplication.config.email.from ?: "support@ala.org.au"
                 subject title
                 to request.email
-                text txt
+                html contents
             }
         } else {
             log.debug("to: " + request.email)
             log.debug("from: " + (grailsApplication.config.email.from ?: "support@ala.org.au"))
             log.debug("subject:" + title)
-            log.debug("text:" + txt)
+            log.debug("html:" + contents)
         }
     }
 

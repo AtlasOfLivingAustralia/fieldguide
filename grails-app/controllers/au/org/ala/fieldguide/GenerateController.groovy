@@ -42,66 +42,10 @@ class GenerateController {
         String string = FileUtils.readFileToString(new File(outputDir + id + ".json"))
         def json = new JsonSlurper().parseText(string)
 
-        def url = grailsApplication.config.service.bie.ws.url + "/species/guids/bulklookup"
-        def list = (json.getAt("guids") as JSONArray)
-        list.remove("")
-        String guidsAsString = list.toString()
-
-        log.debug "get fieldGuide info from bie\nURL: " + url + "\nPOST body: " + guidsAsString
-
-        def http = new HttpClient()
-        def post = new PostMethod(url)
-        post.setRequestBody(guidsAsString)
-        def status = http.executeMethod(post)
-
-        if (status != 200) {
-            log.error "failed to get fieldGuide info from bie"
-            return
-        }
-
-        String text = new String(post.getResponseBody(), "UTF-8");
-
-        //UTF-8 encoding errors removal
-        text = text.replaceAll( "([\\ufffd])", "");
-
-        def taxonProfilesAll = new JsonSlurper().parseText(text).searchDTOList
-        def taxonProfiles = []
-
-        //add image metadata
-        taxonProfilesAll.each { taxon ->
-            if (taxon) {
-                if (taxon.largeImageUrl) {
-                    def imageMetadata = imageService.getInfo(taxon.largeImageUrl)
-                    taxon.imageCreator = imageMetadata?.creator
-                    taxon.imageDataResourceUid = imageMetadata?.dataResourceUid
-                    taxon.imageRights = imageMetadata?.rights
-
-                    if (taxon?.imageDataResourceUid) {
-                        def imageDataResourceMetadata = collectionsService.getInfo(taxon.imageDataResourceUid)
-                        taxon.imageDataResourceUrl = imageDataResourceMetadata.websiteUrl
-                        taxon.imageDataResourceName = imageDataResourceMetadata.name
-                    }
-                }
-                taxonProfiles.add(taxon)
-            }
-        }
-
-       //group sort bie output
-        def taxonGroupedSorted = taxonProfiles.groupBy (
-                [{ it.family ? it.family : "" }, { it.commonNameSingle ? it.commonNameSingle : "" }]
-        ).sort { a, b ->
-            a.key ? b.key ? a.key <=> b.key : 1 : b.key ? -1 : 0
-        }
-        for (tg in taxonGroupedSorted) {
-            taxonGroupedSorted.put(tg.key, tg.value.sort { a, b ->
-                a.key ? b.key ? a.key <=> b.key : 1 : b.key ? -1 : 0
-            })
-        }
-
         Map map = new HashMap();
         map.put("title", json.title ? json.title : "Generated field guide");
         map.put("link", json.link ? json.link : grailsApplication.config.fieldguide.url + "/guide/" + pdfParam );
-        map.put("families", taxonGroupedSorted);
+        map.put("families", json.sortedTaxonInfo);
 
         [
             data: map
@@ -142,6 +86,15 @@ class GenerateController {
             render response as JSON
         } else {
             render status:403, text: "invalid apiKey"
+        }
+    }
+
+    def cache(String id) {
+        def file = new File("${grailsApplication.config.fieldguide.store}/cache/${URLEncoder.encode(id, 'UTF-8').replace('/','')}")
+        if (file.exists()) {
+            render file: file.newInputStream(), contentType: 'image/jpeg'
+        } else {
+            render status: 404
         }
     }
 }
