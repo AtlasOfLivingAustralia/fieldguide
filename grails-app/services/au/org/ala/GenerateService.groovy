@@ -51,6 +51,8 @@ class GenerateService {
         String [] cmd = [ grailsApplication.config.wkhtmltopdf.path,
                           /* page margins (mm) */
                           "-B","10","-L","0","-T","10","-R","0",
+                          /* ignore loading errors */
+                          "--load-error-handling", "ignore"
                           /* encoding */
                           "--encoding","UTF-8",
                           /* footer settings */
