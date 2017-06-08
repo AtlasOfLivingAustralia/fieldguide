@@ -1,19 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 
     <head>
         <title>Field guide produced by ALA using aggregated sources</title>
-        <link rel="stylesheet" href="${resource(dir: 'css', file: 'fieldguide.css')}" type="text/css">
-        <link rel="shortcut icon" type="image/x-icon" href="${resource(file: 'favicon.ico')}">
+        <link rel="stylesheet" href="${grailsApplication.config.fieldguide.url}/css/fieldguide.css" type="text/css"></link>
+
+        <style  type="text/css">
+        @page {
+            size: 210mm 297mm;
+        }
+        </style>
     </head>
 
     <body>
-        <img src="${resource(dir: 'images', file: 'fieldguide-header.jpg', absolute: true)}" width="100%" style="margin-bottom: 10px"/>
+        <img src="${grailsApplication.config.fieldguide.url}/images/fieldguide-header.jpg" width="100%" style="margin-bottom: 10px"/>
 
         <a href="${data.link}" >${data.title} - click here to view original query</a>
 
         <g:each var="family" in="${data.families}">
-            <g:each var="commonName" in="${family.value}" status="i" >
+           <g:each var="commonName" in="${family.value}" status="i" >
                 <g:each var="taxon" in="${commonName.value}" status="j">
                     <div>
                         <g:if test="${i == 0}">
@@ -24,10 +31,10 @@
                         </g:if>
                         <h4>${taxon.scientificName}</h4>
                         <g:if test="${taxon.largeImageUrl != null}">
-                            <img src="${grailsApplication.config.fieldguide.url}/generate/${taxon.thumbnail}"/>
+                            <img src="file://${grailsApplication.config.fieldguide.store}/${taxon.thumbnail.replace('?id=','/')}"/>
                         </g:if>
-                        <img src="${grailsApplication.config.fieldguide.url}/generate/${taxon.densitymap}" width="30%"/>
-                        <img src="${grailsApplication.config.fieldguide.url}/generate/${taxon.densitylegend}" style="width:100px"/>
+                        <img src="file://${grailsApplication.config.fieldguide.store}/${taxon.densitymap.replace('?id=','/')}" width="30%"/>
+                        <img src="file://${grailsApplication.config.fieldguide.store}/${taxon.densitylegend.replace('?id=','/')}" style="width:100px"/>
                     </div>
                 </g:each>
             </g:each>

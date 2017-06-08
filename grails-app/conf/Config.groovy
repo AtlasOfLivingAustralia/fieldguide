@@ -162,8 +162,10 @@ log4j = {
             'org.springframework',
             'org.hibernate',
             'net.sf.ehcache.hibernate'
-    info   'grails.app'
-    debug  'grails.app.controllers',
+
+    error   'grails.app'
+
+    error  'grails.app.controllers',
             'grails.app.services',
             'grails.web.pages'
 }

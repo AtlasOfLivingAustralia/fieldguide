@@ -15,6 +15,7 @@ class GenerateService {
     def grailsApplication
     def imageService
     def collectionsService
+    def pdfRenderingService
 
     def generate(JSONObject json, String origFileRef) {
         long id = System.currentTimeMillis()
@@ -47,33 +48,21 @@ class GenerateService {
 
         String fieldGuideUrl = grailsApplication.config.fieldguide.url + "/generate/fieldguide?id=" + id
 
-        //generate pdf
-        String [] cmd = [ grailsApplication.config.wkhtmltopdf.path,
-                          /* page margins (mm) */
-                          "-B","10","-L","0","-T","10","-R","0",
-                          /* ignore loading errors */
-                          "--load-error-handling", "ignore"
-                          /* encoding */
-                          "--encoding","UTF-8",
-                          /* footer settings */
-                          "--footer-font-size","9",
-                          "--footer-line",
-                          "--footer-left","    www.ala.org.au",
-                          "--footer-right","Page [page] of [toPage]     ",
-                          /* source page */
-                          fieldGuideUrl,
-                          /* output pdf */
-                          pdfPath ]
+        String currentDay = DateFormatUtils.format(new Date(id), "ddMMyyyy")
+        String pdfParam = currentDay + File.separator + "fieldguide" + id + ".pdf"
 
-        String cmdString = cmd[0] + " \"" + cmd[1 .. cmd.length-1].join("\" \"") + "\"";
-        println cmdString
-        log.debug "get fieldGuide html\ncmd: " + cmdString + "\nURL: " + fieldGuideUrl + "\npdf generated: " + pdfPath
+        Map map = new HashMap()
+        map.put("title", json.title ? json.title : "Generated field guide")
+        map.put("link", json.link ? json.link : grailsApplication.config.fieldguide.url + "/guide/" + pdfParam )
+        map.put("families", json.sortedTaxonInfo)
 
-        ProcessBuilder builder = new ProcessBuilder(cmd);
-        builder.environment().putAll(System.getenv());
-        builder.redirectErrorStream(true);
-        Process proc = builder.start();
-        proc.waitFor();
+        def outputStream = FileUtils.openOutputStream(new File(pdfPath))
+
+        pdfRenderingService.render([template: "/generate/fieldguide", model: [data: map], stream: true,
+                filename: fileRef, controller: "generate"], outputStream)
+
+        outputStream.flush()
+        outputStream.close()
 
         if (!new File(pdfPath).exists()) {
             log.error "failed to generate pdf from html\nrequest JSON: " + pthJson + "\nHTML version: " + fieldGuideUrl
@@ -105,17 +94,22 @@ class GenerateService {
                 commonName.each { taxon ->
                     if (taxon?.guid) {
                         //density map
-                        def cachedFile = new File(cacheDir + taxon.guid.replaceAll("[^a-zA-Z0-9\\-\\_\\.]", ""))
+                        def cachedFile = new File(cacheDir + taxon.guid.replaceAll("[^a-zA-Z0-9\\-\\_\\.]", "") + ".png")
+                        def cachedFileHeaderFile = new File(cacheDir + taxon.guid.replaceAll("[^a-zA-Z0-9\\-\\_\\.]", "") + ".legend.png")
                         if (!cachedFile.exists() || cachedFile.lastModified() < maxAgeMs) {
                             FileUtils.copyURLToFile(
                                     new URL("${grailsApplication.config.service.biocache.ws.url}/density/map?q=lsid:%22${taxon.guid}%22&fq=geospatial_kosher:true"),
                                     cachedFile)
+                            FileUtils.copyURLToFile(
+                                    new URL("${grailsApplication.config.service.biocache.ws.url}/density/legend?q=lsid:%22${taxon.guid}%22&fq=geospatial_kosher:true"),
+                                    cachedFileHeaderFile)
                         }
                         taxon.densitymap = "cache?id=" + cachedFile.getName()
+                        taxon.densitylegend = "cache?id=" + cachedFileHeaderFile.getName()
 
                         if (taxon.largeImageUrl) {
                             //species image do not expire. when the image changes the url changes
-                            cachedFile = new File(cacheDir + taxon.largeImageUrl.replaceAll("[^a-zA-Z0-9\\-\\_\\.]", ""))
+                            cachedFile = new File(cacheDir + taxon.largeImageUrl.replaceAll("[^a-zA-Z0-9\\-\\_\\.]", "") + ".jpg")
                             if (!cachedFile.exists()) {
                                 FileUtils.copyURLToFile(new URL("${taxon.largeImageUrl.replace('raw', 'smallRaw')}"), cachedFile)
                             }
@@ -149,10 +143,10 @@ class GenerateService {
             return
         }
 
-        String text = new String(post.getResponseBody(), "UTF-8");
+        String text = new String(post.getResponseBody(), "UTF-8")
 
         //UTF-8 encoding errors removal
-        text = text.replaceAll( "([\\ufffd])", "");
+        text = text.replaceAll( "([\\ufffd])", "")
 
         def taxonProfilesAll = new JsonSlurper().parseText(text).searchDTOList
         def taxonProfiles = []

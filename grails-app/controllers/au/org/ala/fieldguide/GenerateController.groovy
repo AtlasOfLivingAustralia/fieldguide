@@ -4,9 +4,6 @@ import grails.converters.JSON
 import groovy.json.JsonSlurper
 import org.apache.commons.io.FileUtils
 import org.apache.commons.lang.time.DateFormatUtils
-import org.codehaus.groovy.grails.web.json.JSONArray
-import org.apache.commons.httpclient.HttpClient
-import org.apache.commons.httpclient.methods.PostMethod
 import org.codehaus.groovy.grails.web.json.JSONObject
 
 class GenerateController {
@@ -31,6 +28,25 @@ class GenerateController {
         }
     }
 
+    def pdf() {
+        Long id = Long.parseLong(request.getParameter("id"))
+
+        String outputDir = grailsApplication.config.fieldguide.store + File.separator
+        String currentDay = DateFormatUtils.format(new Date(id), "ddMMyyyy")
+        String pdfParam = currentDay + File.separator + "fieldguide" + id + ".pdf"
+
+        //load json
+        String string = FileUtils.readFileToString(new File(outputDir + id + ".json"))
+        def json = new JsonSlurper().parseText(string)
+
+        Map map = new HashMap()
+        map.put("title", json.title ? json.title : "Generated field guide")
+        map.put("link", json.link ? json.link : grailsApplication.config.fieldguide.url + "/guide/" + pdfParam )
+        map.put("families", json.sortedTaxonInfo)
+
+        renderPdf(template: "fieldguide", model: [data: map], filename: "fieldguide" + id + ".pdf", stream: true)
+    }
+
     def fieldguide() {
         Long id = Long.parseLong(request.getParameter("id"))
 
@@ -42,10 +58,10 @@ class GenerateController {
         String string = FileUtils.readFileToString(new File(outputDir + id + ".json"))
         def json = new JsonSlurper().parseText(string)
 
-        Map map = new HashMap();
-        map.put("title", json.title ? json.title : "Generated field guide");
-        map.put("link", json.link ? json.link : grailsApplication.config.fieldguide.url + "/guide/" + pdfParam );
-        map.put("families", json.sortedTaxonInfo);
+        Map map = new HashMap()
+        map.put("title", json.title ? json.title : "Generated field guide")
+        map.put("link", json.link ? json.link : grailsApplication.config.fieldguide.url + "/guide/" + pdfParam )
+        map.put("families", json.sortedTaxonInfo)
 
         [
             data: map
