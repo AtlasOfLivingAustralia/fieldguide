@@ -5,16 +5,16 @@
 
     <head>
         <title>Field guide produced by ALA using aggregated sources</title>
-        <link rel="stylesheet" href="${grailsApplication.config.fieldguide.url}/css/fieldguide.css" type="text/css"></link>
 
-        <style  type="text/css">
-        @page {
-            size: 210mm 297mm;
-        }
-        </style>
+        <link rel="stylesheet" href="${grailsApplication.config.fieldguide.url}/css/fieldguide.css" type="text/css"></link>
     </head>
 
     <body>
+        <div class='footer'>
+            <div style="float:left;margin-left:20px">www.ala.org.au</div>
+            <div style="float:right;margin-right:10px">Page <span id="pagenumber"></span> of <span id="pagecount"></span></div>
+        </div>
+
         <img src="${grailsApplication.config.fieldguide.url}/images/fieldguide-header.jpg" width="100%" style="margin-bottom: 10px"/>
 
         <a href="${data.link}" >${data.title} - click here to view original query</a>

@@ -43,7 +43,6 @@ class GenerateController {
         map.put("title", json.title ? json.title : "Generated field guide")
         map.put("link", json.link ? json.link : grailsApplication.config.fieldguide.url + "/guide/" + pdfParam )
         map.put("families", json.sortedTaxonInfo)
-
         renderPdf(template: "fieldguide", model: [data: map], filename: "fieldguide" + id + ".pdf", stream: true)
     }
 

@@ -1,14 +1,40 @@
-/* FONT STACK */
-body {
-	font-family: Helvetica;
+@page {
+    size: 210mm 297mm;
+
+    @bottom-center {
+        vertical-align: bottom;
+        content: element(footer);
+        padding-bottom: 10px;
+    }
+
+    margin-top: 1cm;
+    margin-left: 0cm;
+    margin-right: 0cm;
+    margin-bottom: 2cm;
+}
+div.footer {
+    font-size: 11px;
+    border-top: solid 1px;
+    display: block;
+    position: running(footer);
+    margin-left: 0px;
+}
+
+#pagenumber:before {
+    content: counter(page);
+}
+
+#pagecount:before {
+    content: counter(pages);
 }
 
 html * {
+    font-family: Helvetica, Dialog;
 	margin: 0;
 }
 
 /* Top link */
-a {
+body > a {
     font-style: italic;
     font-size: 14px;
     color: gray;
@@ -18,27 +44,28 @@ a {
 }
 
 /* Family */
-h2 {
+div > h2 {
     font-size: 18px;
     font-weight: bold;
     margin-bottom: 30px;
 }
 
 /* Common name */
-h3 {
+div > h3 {
     font-size: 11px;
     font-weight: bold;
 }
 
 /* Scientific name */
-h4 {
+div > h4 {
     font-size: 11px;
     font-weight: normal;
     font-style: italic;
+    margin-bottom: 10px;
 }
 
 /* Attribution title */
-h1 {
+body > h1 {
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 30px;
@@ -47,7 +74,7 @@ h1 {
 }
 
 /* Attribution details */
-h5 {
+div > h5 {
     font-size: 11px;
     font-weight: normal;
     margin-top: 4px;
@@ -71,7 +98,7 @@ div > img {
     width: 35%;
 }
 
-div {
+body > div {
     margin-top: 15px;
     margin-left: 30px;
     page-break-inside: avoid;
