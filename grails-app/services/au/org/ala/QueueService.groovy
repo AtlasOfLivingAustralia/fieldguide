@@ -3,7 +3,6 @@ package au.org.ala
 import grails.converters.JSON
 import org.apache.commons.io.FileUtils
 import org.apache.commons.lang.time.DateFormatUtils
-import org.codehaus.groovy.grails.web.json.JSONObject
 
 import javax.annotation.PostConstruct
 import java.util.concurrent.ConcurrentSkipListSet
@@ -83,7 +82,7 @@ class QueueService {
                     found = [status: "finished", downloadUrl: grailsApplication.config.fieldguide.url + "/download/offline/" + id]
                 }
             } else {
-                found = (JSONObject) JSON.parse(FileUtils.readFileToString(file))
+                found = JSON.parse(FileUtils.readFileToString(file))
             }
         } catch (Exception e) {
            log.error("failed to load: " + id, e)
