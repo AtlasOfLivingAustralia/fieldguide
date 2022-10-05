@@ -25,7 +25,7 @@ class QueueService {
 
     @PostConstruct
     init() {
-        File dir = new File("/data/${grailsApplication.metadata['app.name']}/queue/")
+        File dir = new File("/data/fieldguide/queue/")
         if (!dir.exists()) dir.mkdirs()
         for (File queued : dir.listFiles()) {
             Map request = loadFromDisk(queued.getName().replace(".json", ""))
@@ -74,7 +74,7 @@ class QueueService {
         def found = null
         try {
             //try queued files
-            File file = new File("/data/${grailsApplication.metadata['app.name']}/queue/${id}.json")
+            File file = new File("/data/fieldguide/queue/${id}.json")
             if (!file.exists()) {
                 //try finished files
                 file = new File("${grailsApplication.config.fieldguide.store}/${id}")
@@ -95,7 +95,7 @@ class QueueService {
         long id = System.currentTimeMillis()
         String fileRef = DateFormatUtils.format(new Date(id), "ddMMyyyy") + "-" + "fieldguide" + id + ".pdf"
 
-        File queued = new File("/data/${grailsApplication.metadata['app.name']}/queue/${fileRef}.json")
+        File queued = new File("/data/fieldguide/queue/${fileRef}.json")
         queued.getParentFile().mkdirs()
 
         FileUtils.writeStringToFile(queued, (params).toString())
@@ -104,7 +104,7 @@ class QueueService {
     }
 
     def deleteFromDisk(String fileRef) {
-        File queued = new File("/data/${grailsApplication.metadata['app.name']}/queue/${fileRef}.json")
+        File queued = new File("/data/fieldguide/queue/${fileRef}.json")
         if (queued.exists()) {
             FileUtils.deleteQuietly(queued)
         }
@@ -219,7 +219,7 @@ class QueueService {
                             if (fileRef != null) {
                                 request.remove('statusUrl')
                                 request.put('status', 'finished')
-                                request.put('downloadUrl', grailsApplication.config.fieldguide.url + '/download/offline/' + fileRef)
+                                request.put('downloadUrl', grailsApplication.config.fieldguide.url + '/download/' + fileRef)
 
                                 emailSuccess(request)
                             }

@@ -58,7 +58,7 @@ class GenerateService {
 
         def outputStream = FileUtils.openOutputStream(new File(pdfPath))
 
-        InputStream stream = new URL(Holders.config.grails.serverURL + '/generate/fieldguide?id=' + id).openStream()
+        InputStream stream = new URL(Holders.config.fieldguide.url + '/generate/fieldguide?id=' + id).openStream()
         outputStream << stream
         outputStream.flush()
         outputStream.close()
