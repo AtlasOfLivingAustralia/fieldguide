@@ -145,59 +145,6 @@ class QueueService {
         status
     }
 
-    def stats() {
-        def list = []
-
-        //queued
-        order.each { i ->
-            list.add(queue.get(i))
-        }
-
-        //running
-        consumers.each { t ->
-            def current = t.current
-            if (current) list.add(current)
-        }
-
-        list
-    }
-
-    def isApiKeyValid(key) {
-        if (!(grailsApplication.config.api.check.enabled ?: true)) {
-            true
-        } else if(!key) {
-            false
-        } else if (apiKeys.contains(key)) {
-            true
-        } else if (new URL(grailsApplication.config.api.check.url ?: "https://auth.ala.org.au/apikey/ws/check?apikey=" + key)?.text?.contains("true")) {
-            apiKeys.add(key)
-            true
-        } else {
-            false
-        }
-    }
-
-    def cancel(id) {
-        def removed = false
-        if (id != null && id.matches("^[\\w-]+.pdf\$")) {
-            //try to remove from queue
-            removed = queue.remove(id) != null
-
-            //also remove from running
-            consumers.eachWithIndex { t, idx ->
-                def current = t.current
-                if (current && current?.fileRef)  {
-                    t.interrupt()
-                    consumers[idx] = new ConsumerThread()
-                    removed = true
-                }
-            }
-
-        }
-
-        removed
-    }
-
     class ConsumerThread extends Thread {
         def current = null
 

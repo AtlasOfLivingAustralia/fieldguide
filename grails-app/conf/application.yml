@@ -65,6 +65,10 @@ security:
     discoveryUri: https://auth.ala.org.au/cas/oidc/.well-known
     fallbackToLegacyBehaviour: true
 
+webservice:
+  jwt: true
+  jwt-scopes: "openid users/read"
+
 ---
 grails:
     serverURL: "http://fieldguide.ala.org.au"
@@ -180,7 +184,7 @@ environments:
         grails:
             server:
                 use-forward-headers: true
-            serverURL: http://devt.ala.org.au:8080
+            serverURL: http://localhost:8080
 
         server:
             port: 8080
