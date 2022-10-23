@@ -127,10 +127,13 @@ class GenerateService {
 
         def url = grailsApplication.config.service.bie.ws.url + "/species/guids/bulklookup"
         def list = (json.getAt("guids") as JSONArray)
+        if (!list) {
+            list = [(json.getAt("guid").toString())]
+        }
         list.remove("")
-        String guidsAsString = list.toString()
+        String guidsAsString = (list as JSON).toString()
 
-        log.debug "get fieldGuide info from bie\nURL: " + url + "\nPOST body: " + guidsAsString
+        log.info "get fieldGuide info from bie\nURL: " + url + "\nPOST body: " + guidsAsString
 
         def http = new HttpClient()
         def post = new PostMethod(url)

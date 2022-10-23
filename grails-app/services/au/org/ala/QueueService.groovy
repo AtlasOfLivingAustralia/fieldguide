@@ -5,7 +5,6 @@ import org.apache.commons.io.FileUtils
 import org.apache.commons.lang.time.DateFormatUtils
 
 import javax.annotation.PostConstruct
-import java.util.concurrent.ConcurrentSkipListSet
 import java.util.concurrent.LinkedBlockingQueue
 
 class QueueService {
@@ -20,8 +19,6 @@ class QueueService {
     final LinkedBlockingQueue<String> order = new LinkedBlockingQueue<>()
 
     Thread [] consumers
-
-    Set<String> apiKeys = new ConcurrentSkipListSet<>()
 
     @PostConstruct
     init() {
@@ -98,7 +95,7 @@ class QueueService {
         File queued = new File("/data/fieldguide/queue/${fileRef}.json")
         queued.getParentFile().mkdirs()
 
-        FileUtils.writeStringToFile(queued, (params).toString())
+        FileUtils.writeStringToFile(queued, (params as JSON).toString())
 
         fileRef
     }
