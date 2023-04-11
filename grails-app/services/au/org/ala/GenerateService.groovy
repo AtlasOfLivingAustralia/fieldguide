@@ -2,20 +2,20 @@ package au.org.ala
 
 import grails.converters.JSON
 import grails.util.Environment
+import grails.util.Holders
 import groovy.json.JsonSlurper
 import org.apache.commons.httpclient.HttpClient
 import org.apache.commons.httpclient.methods.PostMethod
 import org.apache.commons.io.FileUtils
-import org.apache.commons.lang.time.DateFormatUtils
-import org.codehaus.groovy.grails.web.json.JSONArray
-import org.codehaus.groovy.grails.web.json.JSONObject
+import org.apache.commons.lang3.time.DateFormatUtils
+import org.grails.web.json.JSONArray
+import org.grails.web.json.JSONObject
 
 class GenerateService {
 
     def grailsApplication
     def imageService
     def collectionsService
-    def pdfRenderingService
 
     def generate(JSONObject json, String origFileRef) {
         long id = System.currentTimeMillis()
@@ -38,15 +38,10 @@ class GenerateService {
 
         //add taxon info from bie
         json.sortedTaxonInfo = getSortedTaxonInfo(json)
+        json.fileRef = fileRef
 
         //local image cache
         cacheImages(json)
-
-        //write json to dir
-        String pthJson = outputDir + id + ".json"
-        FileUtils.writeStringToFile(new File(pthJson), (json as JSON).toString())
-
-        String fieldGuideUrl = grailsApplication.config.fieldguide.url + "/generate/fieldguide?id=" + id
 
         String currentDay = DateFormatUtils.format(new Date(id), "ddMMyyyy")
         String pdfParam = currentDay + File.separator + "fieldguide" + id + ".pdf"
@@ -55,12 +50,16 @@ class GenerateService {
         map.put("title", json.title ? json.title : "Generated field guide")
         map.put("link", json.link ? json.link : grailsApplication.config.fieldguide.url + "/guide/" + pdfParam )
         map.put("families", json.sortedTaxonInfo)
+        map.put("filename", json.fileRef)
+
+        //write json to dir
+        String pthJson = outputDir + id + ".json"
+        FileUtils.writeStringToFile(new File(pthJson), (json as JSON).toString())
 
         def outputStream = FileUtils.openOutputStream(new File(pdfPath))
 
-        pdfRenderingService.render([template: "/generate/fieldguide", model: [data: map], stream: true,
-                filename: fileRef, controller: "generate"], outputStream)
-
+        InputStream stream = new URL(Holders.config.fieldguide.url + '/generate/fieldguide?id=' + id).openStream()
+        outputStream << stream
         outputStream.flush()
         outputStream.close()
 
@@ -128,14 +127,18 @@ class GenerateService {
 
         def url = grailsApplication.config.service.bie.ws.url + "/species/guids/bulklookup"
         def list = (json.getAt("guids") as JSONArray)
+        if (!list) {
+            list = [(json.getAt("guid").toString())]
+        }
         list.remove("")
-        String guidsAsString = list.toString()
+        String guidsAsString = (list as JSON).toString()
 
-        log.debug "get fieldGuide info from bie\nURL: " + url + "\nPOST body: " + guidsAsString
+        log.info "get fieldGuide info from bie\nURL: " + url + "\nPOST body: " + guidsAsString
 
         def http = new HttpClient()
         def post = new PostMethod(url)
         post.setRequestBody(guidsAsString)
+        //post.setRequestHeader("content-type", "application/json")
         def status = http.executeMethod(post)
 
         if (status != 200) {

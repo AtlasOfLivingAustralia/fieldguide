@@ -6,7 +6,7 @@
     <head>
         <title>Field guide produced by ALA using aggregated sources</title>
 
-        <link rel="stylesheet" href="${grailsApplication.config.fieldguide.url}/css/fieldguide.css" type="text/css"></link>
+        <link rel="stylesheet" href="${grailsApplication.config.fieldguide.url}/static/css/fieldguide.css" type="text/css"></link>
     </head>
 
     <body>
@@ -15,7 +15,7 @@
             <div style="float:right;margin-right:10px">Page <span id="pagenumber"></span> of <span id="pagecount"></span></div>
         </div>
 
-        <img src="${grailsApplication.config.fieldguide.url}/images/fieldguide-header.jpg" width="100%" style="margin-bottom: 10px"/>
+        <img src="${grailsApplication.config.fieldguide.url}/static/images/fieldguide-header.jpg" width="100%" style="margin-bottom: 10px"/>
 
         <a href="${data.link}" >${data.title} - click here to view original query</a>
 

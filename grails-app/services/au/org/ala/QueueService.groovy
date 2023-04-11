@@ -3,10 +3,8 @@ package au.org.ala
 import grails.converters.JSON
 import org.apache.commons.io.FileUtils
 import org.apache.commons.lang.time.DateFormatUtils
-import org.codehaus.groovy.grails.web.json.JSONObject
 
 import javax.annotation.PostConstruct
-import java.util.concurrent.ConcurrentSkipListSet
 import java.util.concurrent.LinkedBlockingQueue
 
 class QueueService {
@@ -22,11 +20,9 @@ class QueueService {
 
     Thread [] consumers
 
-    Set<String> apiKeys = new ConcurrentSkipListSet<>()
-
     @PostConstruct
     init() {
-        File dir = new File("/data/${grailsApplication.metadata['app.name']}/queue/")
+        File dir = new File("/data/fieldguide/queue/")
         if (!dir.exists()) dir.mkdirs()
         for (File queued : dir.listFiles()) {
             Map request = loadFromDisk(queued.getName().replace(".json", ""))
@@ -75,7 +71,7 @@ class QueueService {
         def found = null
         try {
             //try queued files
-            File file = new File("/data/${grailsApplication.metadata['app.name']}/queue/${id}.json")
+            File file = new File("/data/fieldguide/queue/${id}.json")
             if (!file.exists()) {
                 //try finished files
                 file = new File("${grailsApplication.config.fieldguide.store}/${id}")
@@ -83,7 +79,7 @@ class QueueService {
                     found = [status: "finished", downloadUrl: grailsApplication.config.fieldguide.url + "/download/offline/" + id]
                 }
             } else {
-                found = (JSONObject) JSON.parse(FileUtils.readFileToString(file))
+                found = JSON.parse(FileUtils.readFileToString(file))
             }
         } catch (Exception e) {
            log.error("failed to load: " + id, e)
@@ -96,16 +92,16 @@ class QueueService {
         long id = System.currentTimeMillis()
         String fileRef = DateFormatUtils.format(new Date(id), "ddMMyyyy") + "-" + "fieldguide" + id + ".pdf"
 
-        File queued = new File("/data/${grailsApplication.metadata['app.name']}/queue/${fileRef}.json")
+        File queued = new File("/data/fieldguide/queue/${fileRef}.json")
         queued.getParentFile().mkdirs()
 
-        FileUtils.writeStringToFile(queued, (params).toString())
+        FileUtils.writeStringToFile(queued, (params as JSON).toString())
 
         fileRef
     }
 
     def deleteFromDisk(String fileRef) {
-        File queued = new File("/data/${grailsApplication.metadata['app.name']}/queue/${fileRef}.json")
+        File queued = new File("/data/fieldguide/queue/${fileRef}.json")
         if (queued.exists()) {
             FileUtils.deleteQuietly(queued)
         }
@@ -146,59 +142,6 @@ class QueueService {
         status
     }
 
-    def stats() {
-        def list = []
-
-        //queued
-        order.each { i ->
-            list.add(queue.get(i))
-        }
-
-        //running
-        consumers.each { t ->
-            def current = t.current
-            if (current) list.add(current)
-        }
-
-        list
-    }
-
-    def isApiKeyValid(key) {
-        if (!(grailsApplication.config.api.check.enabled ?: true)) {
-            true
-        } else if(!key) {
-            false
-        } else if (apiKeys.contains(key)) {
-            true
-        } else if (new URL(grailsApplication.config.api.check.url ?: "https://auth.ala.org.au/apikey/ws/check?apikey=" + key)?.text?.contains("true")) {
-            apiKeys.add(key)
-            true
-        } else {
-            false
-        }
-    }
-
-    def cancel(id) {
-        def removed = false
-        if (id != null && id.matches("^[\\w-]+.pdf\$")) {
-            //try to remove from queue
-            removed = queue.remove(id) != null
-
-            //also remove from running
-            consumers.eachWithIndex { t, idx ->
-                def current = t.current
-                if (current && current?.fileRef)  {
-                    t.interrupt()
-                    consumers[idx] = new ConsumerThread()
-                    removed = true
-                }
-            }
-
-        }
-
-        removed
-    }
-
     class ConsumerThread extends Thread {
         def current = null
 
@@ -220,7 +163,7 @@ class QueueService {
                             if (fileRef != null) {
                                 request.remove('statusUrl')
                                 request.put('status', 'finished')
-                                request.put('downloadUrl', grailsApplication.config.fieldguide.url + '/download/offline/' + fileRef)
+                                request.put('downloadUrl', grailsApplication.config.fieldguide.url + '/download/' + fileRef)
 
                                 emailSuccess(request)
                             }
