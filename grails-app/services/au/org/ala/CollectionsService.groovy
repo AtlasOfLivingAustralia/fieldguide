@@ -14,7 +14,8 @@ class CollectionsService {
 
         try {
             def jsonSlurper = new JsonSlurper()
-            md = jsonSlurper.parseText(new URL(grailsApplication.config.collections.url + '/ws/dataResource/' + dataResourceUid).text)
+            // updating config retrieval to allow fo backwards compatibility and still work with api endpoint from apigateway
+            md = jsonSlurper.parseText(new URL((grailsApplication.config.collections.ws?.url ?: grailsApplication.config.collections.url) + '/ws/dataResource/' + dataResourceUid).text)
         } catch (err) {
             log.error("failed to get collection metadata for: " + dataResourceUid, err)
         }
