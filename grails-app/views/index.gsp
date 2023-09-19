@@ -7,7 +7,7 @@
         <h1>Field Guide Generator</h1>
 
         <p>
-            HTTP POST an array of GUIDs to ${grailsApplication.config.fieldguide.url}/generate to generate a field guide.  Include in request header, Content-Type: application/json
+            HTTP POST an array of GUIDs to ${grailsApplication.config.fieldguide.service.url}/generate to generate a field guide.  Include in request header, Content-Type: application/json
         </p>
 
         <p>
@@ -26,7 +26,7 @@
 
         <p>
             <textarea rows="8" cols="120">
-            {"status":"running","statusUrl":"${grailsApplication.config.fieldguide.url}/status/23092022-fieldguide1663911782972.pdf"}
+            {"status":"running","statusUrl":"${grailsApplication.config.fieldguide.service.url}/status/23092022-fieldguide1663911782972.pdf"}
             </textarea>
         </p>
 
@@ -34,7 +34,7 @@
 
         <p>
             <textarea rows="8" cols="120">
-            {"status":"finished","downloadUrl":"${grailsApplication.config.fieldguide.url}/download/23092022-fieldguide1663911782972.pdf"}
+            {"status":"finished","downloadUrl":"${grailsApplication.config.fieldguide.service.url}/download/23092022-fieldguide1663911782972.pdf"}
             </textarea>
         </p>
     </body>

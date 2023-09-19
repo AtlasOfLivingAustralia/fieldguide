@@ -76,7 +76,7 @@ class QueueService {
                 //try finished files
                 file = new File("${grailsApplication.config.fieldguide.store}/${id}")
                 if (file.exists()) {
-                    found = [status: "finished", downloadUrl: grailsApplication.config.fieldguide.url + "/download/offline/" + id]
+                    found = [status: "finished", downloadUrl: grailsApplication.config.fieldguide.service.url + "/download/" + id]
                 }
             } else {
                 found = JSON.parse(FileUtils.readFileToString(file))
@@ -134,7 +134,7 @@ class QueueService {
                 if (queued?.downloadUrl) {
                     status = [status: queued.status, downloadUrl: queued.downloadUrl]
                 } else {
-                    status = [status: queued.status, statusUrl: grailsApplication.config.fieldguide.url + '/generate/status/' + queued.fileRef ]
+                    status = [status: queued.status, statusUrl: grailsApplication.config.fieldguide.service.url + '/status/' + queued.fileRef ]
                 }
             }
         }
@@ -163,7 +163,7 @@ class QueueService {
                             if (fileRef != null) {
                                 request.remove('statusUrl')
                                 request.put('status', 'finished')
-                                request.put('downloadUrl', grailsApplication.config.fieldguide.url + '/download/' + fileRef)
+                                request.put('downloadUrl', grailsApplication.config.fieldguide.service.url + '/download/' + fileRef)
 
                                 emailSuccess(request)
                             }

@@ -5,6 +5,7 @@ service:
       url: "https://biocache.ala.org.au/ws"
 
 fieldguide.url: http://localhost:8080
+fieldguide.service.url: https://api.ala.org.au/fieldguide
 fieldguide.store: /data/fieldguide/store
 collections.url: 'https://collections.ala.org.au'
 collections.ws.url: 'https://collections.ala.org.au/ws'
