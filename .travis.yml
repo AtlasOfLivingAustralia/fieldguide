@@ -8,6 +8,7 @@ branches:
     - develop
     - master
     - feature/grails5
+    - feature/gateway_urls
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
