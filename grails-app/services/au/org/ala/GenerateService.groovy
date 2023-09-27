@@ -27,7 +27,7 @@ class GenerateService {
             fileRef = origFileRef
         }
 
-        String outputDir = grailsApplication.config.fieldguide.store + File.separator
+        String outputDir = grailsApplication.config.getProperty('fieldguide.store') + File.separator
         String pdfPath = outputDir + fileRef
 
 
@@ -48,7 +48,7 @@ class GenerateService {
 
         Map map = new HashMap()
         map.put("title", json.title ? json.title : "Generated field guide")
-        map.put("link", json.link ? json.link : grailsApplication.config.fieldguide.url + "/guide/" + pdfParam )
+        map.put("link", json.link ? json.link : grailsApplication.config.getProperty('fieldguide.url') + "/guide/" + pdfParam )
         map.put("families", json.sortedTaxonInfo)
         map.put("filename", json.fileRef)
 
@@ -79,12 +79,12 @@ class GenerateService {
     }
 
     def cacheImages(json) {
-        def cacheDir = "${grailsApplication.config.fieldguide.store}/cache/"
+        def cacheDir = "${grailsApplication.config.getProperty('fieldguide.store')}/cache/"
         def cacheDirFile = new File(cacheDir)
         if (!cacheDirFile.exists()) cacheDirFile.mkdirs()
 
         //default 1 day cache age
-        def maxAgeMs = System.currentTimeMillis() - (grailsApplication.config.images.cache.age.minutes ?: 24 * 20) * 60 * 1000
+        def maxAgeMs = System.currentTimeMillis() - (grailsApplication.config.getProperty('images.cache.age.minutes') ?: 24 * 20) * 60 * 1000
         for (Object o : json.sortedTaxonInfo ) {
             println(o)
         }
@@ -97,10 +97,10 @@ class GenerateService {
                         def cachedFileHeaderFile = new File(cacheDir + taxon.guid.replaceAll("[^a-zA-Z0-9\\-\\_\\.]", "") + ".legend.png")
                         if (!cachedFile.exists() || cachedFile.lastModified() < maxAgeMs) {
                             FileUtils.copyURLToFile(
-                                    new URL("${grailsApplication.config.service.biocache.ws.url}/density/map?q=lsid:%22${taxon.guid}%22&fq=geospatial_kosher:true"),
+                                    new URL("${grailsApplication.config.getProperty('service.biocache.ws.url')}/density/map?q=lsid:%22${taxon.guid}%22&fq=geospatial_kosher:true"),
                                     cachedFile)
                             FileUtils.copyURLToFile(
-                                    new URL("${grailsApplication.config.service.biocache.ws.url}/density/legend?q=lsid:%22${taxon.guid}%22&fq=geospatial_kosher:true"),
+                                    new URL("${grailsApplication.config.getProperty('service.biocache.ws.url')}/density/legend?q=lsid:%22${taxon.guid}%22&fq=geospatial_kosher:true"),
                                     cachedFileHeaderFile)
                         }
                         taxon.densitymap = "cache?id=" + cachedFile.getName()
@@ -125,7 +125,7 @@ class GenerateService {
             return json.sortedTaxonInfo
         }
 
-        def url = grailsApplication.config.service.bie.ws.url + "/species/guids/bulklookup"
+        def url = grailsApplication.config.getProperty('service.bie.ws.url') + "/species/guids/bulklookup"
         def list = (json.getAt("guids") as JSONArray)
         if (!list) {
             list = [(json.getAt("guid").toString())]

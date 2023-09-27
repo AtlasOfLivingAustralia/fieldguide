@@ -21,7 +21,7 @@ class ImageService {
                 def imageId = parseId(imageUrl)
 
                 def jsonSlurper = new JsonSlurper()
-                md = jsonSlurper.parseText(new URL(grailsApplication.config.image.ws.url + '/image/' + imageId).text)
+                md = jsonSlurper.parseText(new URL(grailsApplication.config.getProperty('image.ws.url') + '/image/' + imageId).text)
             } catch (err) {
                 log.error("failed to get image metadata for: " + imageUrl, err)
             }

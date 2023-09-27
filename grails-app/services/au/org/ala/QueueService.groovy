@@ -32,7 +32,7 @@ class QueueService {
                 queued.delete()
             }
         }
-        consumers = new Thread[grailsApplication.config.threadPoolSize ?: 4]
+        consumers = new Thread[grailsApplication.config.getProperty('threadPoolSize') ?: 4]
         for (int i=0;i<consumers.length;i++) {
             consumers[i] = new ConsumerThread()
             consumers[i].start()
@@ -40,28 +40,28 @@ class QueueService {
     }
 
     def emailSuccess(Map request) {
-        TimeZone.setDefault(TimeZone.getTimeZone(grailsApplication.config.timezone ?: "Australia/Canberra"))
+        TimeZone.setDefault(TimeZone.getTimeZone(grailsApplication.config.getProperty('timezone') ?: "Australia/Canberra"))
 
-        String contents = (grailsApplication.config.email.text.success ?: "Your download is available on the URL:" +
+        String contents = (grailsApplication.config.getProperty('email.text.success') ?: "Your download is available on the URL:" +
                 "<br><br>[url]<br><br>When using this field guide please use the following citation:" +
                 "<br><br><cite>Atlas of Living Australia field guide generated from [query] accessed on [date]." +
                 "</cite><br><br>More information can be found at " +
                 "<a href='http://www.ala.org.au/about-the-atlas/terms-of-use/citing-the-atlas/'>citing the ALA</a>.<br><br>")
                 .replace("[url]", request.downloadUrl).replace("[date]", new Date().toString()).replace("[query]", request?.data?.link ?: "")
 
-        String title = (grailsApplication.config.email.subject.success ?: "ALA Field Guide Download Complete - [filename]")
+        String title = (grailsApplication.config.getProperty('email.subject.success') ?: "ALA Field Guide Download Complete - [filename]")
                 .replace("[filename]", request.fileRef)
 
-        if (grailsApplication.config.email.enabled) {
+        if (grailsApplication.config.getProperty('email.enabled')) {
             mailService.sendMail {
-                from grailsApplication.config.email.from ?: "support@ala.org.au"
+                from grailsApplication.config.getProperty('email.from') ?: "support@ala.org.au"
                 subject title
                 to request.email
                 html contents
             }
         } else {
             log.debug("to: " + request.email)
-            log.debug("from: " + (grailsApplication.config.email.from ?: "support@ala.org.au"))
+            log.debug("from: " + (grailsApplication.config.getProperty('email.from') ?: "support@ala.org.au"))
             log.debug("subject:" + title)
             log.debug("html:" + contents)
         }
@@ -74,9 +74,9 @@ class QueueService {
             File file = new File("/data/fieldguide/queue/${id}.json")
             if (!file.exists()) {
                 //try finished files
-                file = new File("${grailsApplication.config.fieldguide.store}/${id}")
+                file = new File("${grailsApplication.config.getProperty('fieldguide.store')}/${id}")
                 if (file.exists()) {
-                    found = [status: "finished", downloadUrl: grailsApplication.config.fieldguide.service.url + "/download/" + id]
+                    found = [status: "finished", downloadUrl: grailsApplication.config.getProperty('fieldguide.service.url') + "/download/" + id]
                 }
             } else {
                 found = JSON.parse(FileUtils.readFileToString(file))
@@ -134,7 +134,7 @@ class QueueService {
                 if (queued?.downloadUrl) {
                     status = [status: queued.status, downloadUrl: queued.downloadUrl]
                 } else {
-                    status = [status: queued.status, statusUrl: grailsApplication.config.fieldguide.service.url + '/status/' + queued.fileRef ]
+                    status = [status: queued.status, statusUrl: grailsApplication.config.getProperty('fieldguide.service.url') + '/status/' + queued.fileRef ]
                 }
             }
         }
@@ -163,7 +163,7 @@ class QueueService {
                             if (fileRef != null) {
                                 request.remove('statusUrl')
                                 request.put('status', 'finished')
-                                request.put('downloadUrl', grailsApplication.config.fieldguide.service.url + '/download/' + fileRef)
+                                request.put('downloadUrl', grailsApplication.config.getProperty('fieldguide.service.url') + '/download/' + fileRef)
 
                                 emailSuccess(request)
                             }
