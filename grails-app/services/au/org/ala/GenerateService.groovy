@@ -84,7 +84,7 @@ class GenerateService {
         if (!cacheDirFile.exists()) cacheDirFile.mkdirs()
 
         //default 1 day cache age
-        def maxAgeMs = System.currentTimeMillis() - (grailsApplication.config.getProperty('images.cache.age.minutes') ?: 24 * 20) * 60 * 1000
+        def maxAgeMs = System.currentTimeMillis() - (grailsApplication.config.getProperty('images.cache.age.minutes', int) ?: 24 * 20) * 60 * 1000
         for (Object o : json.sortedTaxonInfo ) {
             println(o)
         }

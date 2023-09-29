@@ -93,8 +93,8 @@ class GenerateController {
     def offline() {
         log.info(params.toString())
         log.info(request.JSON.toString())
-        if (grailsApplication.config.getProperty('validateEmail') &&
-                (grailsApplication.config.getProperty('security.cas.enabled') || grailsApplication.config.getProperty('security.oidc.enabled'))) {
+        if (grailsApplication.config.getProperty('validateEmail', boolean) &&
+                (grailsApplication.config.getProperty('security.cas.enabled', boolean) || grailsApplication.config.getProperty('security.oidc.enabled', boolean))) {
             // use logged in user's email
             String validEmail = authService.email
 

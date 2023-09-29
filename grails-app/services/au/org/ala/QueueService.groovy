@@ -32,7 +32,7 @@ class QueueService {
                 queued.delete()
             }
         }
-        consumers = new Thread[grailsApplication.config.getProperty('threadPoolSize') ?: 4]
+        consumers = new Thread[grailsApplication.config.getProperty('threadPoolSize', int) ?: 4]
         for (int i=0;i<consumers.length;i++) {
             consumers[i] = new ConsumerThread()
             consumers[i].start()
@@ -52,7 +52,7 @@ class QueueService {
         String title = (grailsApplication.config.getProperty('email.subject.success') ?: "ALA Field Guide Download Complete - [filename]")
                 .replace("[filename]", request.fileRef)
 
-        if (grailsApplication.config.getProperty('email.enabled')) {
+        if (grailsApplication.config.getProperty('email.enabled', boolean)) {
             mailService.sendMail {
                 from grailsApplication.config.getProperty('email.from') ?: "support@ala.org.au"
                 subject title

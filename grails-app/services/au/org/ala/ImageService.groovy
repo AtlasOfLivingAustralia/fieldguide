@@ -7,9 +7,24 @@ import groovy.json.JsonSlurper
 class ImageService {
 
     def grailsApplication
+    def uuidPattern = ~/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
 
     def parseId(imageUrl) {
-        return imageUrl.split('=')[1]
+        def list
+        def id
+        if(imageUrl.contains("=")) {
+            list = imageUrl.split('=')
+        }
+        else{
+            list= imageUrl.split("/")
+        }
+
+        list.each {
+            if(uuidPattern.matcher(it).matches()){
+                id = it
+            }
+        }
+        return id
     }
 
     @Cacheable("imageMetadata")
