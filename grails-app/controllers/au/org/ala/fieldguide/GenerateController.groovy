@@ -91,8 +91,6 @@ class GenerateController {
     @Produces("application/json")
     //initiate generation of an offline field guide
     def offline() {
-        log.info(params.toString())
-        log.info(request.JSON.toString())
         if (grailsApplication.config.getProperty('validateEmail', boolean) &&
                 (grailsApplication.config.getProperty('security.cas.enabled', boolean) || grailsApplication.config.getProperty('security.oidc.enabled', boolean))) {
             // use logged in user's email

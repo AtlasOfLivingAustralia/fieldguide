@@ -110,7 +110,12 @@ class GenerateService {
                             //species image do not expire. when the image changes the url changes
                             cachedFile = new File(cacheDir + taxon.largeImageUrl.replaceAll("[^a-zA-Z0-9\\-\\_\\.]", "") + ".jpg")
                             if (!cachedFile.exists()) {
-                                FileUtils.copyURLToFile(new URL("${taxon.largeImageUrl.replace('raw', 'smallRaw')}"), cachedFile)
+                                try {
+                                    FileUtils.copyURLToFile(new URL("${taxon.largeImageUrl.replace('raw', 'smallRaw')}"), cachedFile)
+                                }
+                                catch (err){
+                                    log.error("failed to cache the image: " + taxon.largeImageUrl, err)
+                                }
                             }
                             taxon.thumbnail = "cache?id=" + cachedFile.getName()
                         }
