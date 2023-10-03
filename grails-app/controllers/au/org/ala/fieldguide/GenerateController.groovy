@@ -110,8 +110,6 @@ class GenerateController {
         if (!params.email) {
             render status: 400, text: 'Invalid parameter \'email\''
         } else {
-            log.info(params.toString())
-            log.info(request.JSON.toString())
             render queueService.add(new JSONObject(params), request.JSON) as JSON
         }
     }
