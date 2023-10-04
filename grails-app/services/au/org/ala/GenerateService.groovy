@@ -58,7 +58,7 @@ class GenerateService {
 
         def outputStream = FileUtils.openOutputStream(new File(pdfPath))
 
-        InputStream stream = new URL(Holders.config.fieldguide.url + '/generate/fieldguide?id=' + id).openStream()
+        InputStream stream = new URL(grailsApplication.config.getProperty('fieldguide.url') + '/generate/fieldguide?id=' + id).openStream()
         outputStream << stream
         outputStream.flush()
         outputStream.close()
@@ -114,7 +114,7 @@ class GenerateService {
                                     FileUtils.copyURLToFile(new URL("${taxon.largeImageUrl.replace('raw', 'smallRaw')}"), cachedFile)
                                 }
                                 catch (err){
-                                    log.error("failed to cache the image: " + taxon.largeImageUrl, err)
+                                    log.error("Failed to cache the image: ${taxon.largeImageUrl.replace('raw', 'smallRaw')} \nError: ${err.message}")
                                 }
                             }
                             taxon.thumbnail = "cache?id=" + cachedFile.getName()
