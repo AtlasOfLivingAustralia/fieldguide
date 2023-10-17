@@ -7,9 +7,24 @@ import groovy.json.JsonSlurper
 class ImageService {
 
     def grailsApplication
+    def uuidPattern = ~/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
 
     def parseId(imageUrl) {
-        return imageUrl.split('=')[1]
+        def list
+        def id
+        if(imageUrl.contains("=")) {
+            list = imageUrl.split('=')
+        }
+        else{
+            list= imageUrl.split("/")
+        }
+
+        list.each {
+            if(uuidPattern.matcher(it).matches()){
+                id = it
+            }
+        }
+        return id
     }
 
     @Cacheable("imageMetadata")
@@ -21,9 +36,9 @@ class ImageService {
                 def imageId = parseId(imageUrl)
 
                 def jsonSlurper = new JsonSlurper()
-                md = jsonSlurper.parseText(new URL(grailsApplication.config.image.ws.url + '/image/' + imageId).text)
+                md = jsonSlurper.parseText(new URL(grailsApplication.config.getProperty('image.ws.url') + '/image/' + imageId).text)
             } catch (err) {
-                log.error("failed to get image metadata for: " + imageUrl, err)
+                log.error("Failed to get image metadata for: ${imageUrl} \nError: ${err.message}")
             }
         }
 

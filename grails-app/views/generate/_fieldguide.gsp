@@ -6,7 +6,7 @@
     <head>
         <title>Field guide produced by ALA using aggregated sources</title>
 
-        <link rel="stylesheet" href="${grailsApplication.config.fieldguide.url}/static/css/fieldguide.css" type="text/css"></link>
+        <link rel="stylesheet" href="${grailsApplication.config.getProperty('fieldguide.url')}/static/css/fieldguide.css" type="text/css"></link>
     </head>
 
     <body>
@@ -15,7 +15,7 @@
             <div style="float:right;margin-right:10px">Page <span id="pagenumber"></span> of <span id="pagecount"></span></div>
         </div>
 
-        <img src="${grailsApplication.config.fieldguide.url}/static/images/fieldguide-header.jpg" width="100%" style="margin-bottom: 10px"/>
+        <img src="${grailsApplication.config.getProperty('fieldguide.url')}/static/images/fieldguide-header.jpg" width="100%" style="margin-bottom: 10px"/>
 
         <a href="${data.link}" >${data.title} - click here to view original query</a>
 
@@ -31,10 +31,10 @@
                         </g:if>
                         <h4>${taxon.scientificName}</h4>
                         <g:if test="${taxon.largeImageUrl != null}">
-                            <img src="file://${grailsApplication.config.fieldguide.store}/${taxon.thumbnail.replace('?id=','/')}"/>
+                            <img src="file://${grailsApplication.config.getProperty('fieldguide.store')}/${taxon.thumbnail.replace('?id=','/')}"/>
                         </g:if>
-                        <img src="file://${grailsApplication.config.fieldguide.store}/${taxon.densitymap.replace('?id=','/')}" width="30%"/>
-                        <img src="file://${grailsApplication.config.fieldguide.store}/${taxon.densitylegend.replace('?id=','/')}" style="width:100px"/>
+                        <img src="file://${grailsApplication.config.getProperty('fieldguide.store')}/${taxon.densitymap.replace('?id=','/')}" width="30%"/>
+                        <img src="file://${grailsApplication.config.getProperty('fieldguide.store')}/${taxon.densitylegend.replace('?id=','/')}" style="width:100px"/>
                     </div>
                 </g:each>
             </g:each>
@@ -48,7 +48,7 @@
                         <h4>${taxon.scientificName}</h4>
                         <g:if test="${taxon.datasetName}">
                             <h5>Taxonomic information supplied by: <a
-                                    href="${grailsApplication.config.collections.url + '/public/show/' + taxon.datasetID}">${taxon.datasetName}</a>
+                                    href="${grailsApplication.config.getProperty('collections.url') + '/public/show/' + taxon.datasetID}">${taxon.datasetName}</a>
                             </h5>
                         </g:if>
                         <g:if test="${taxon.imageDataResourceURL}">
@@ -57,7 +57,7 @@
                         </g:if>
                         <g:if test="${ taxon.imageCreator }">
                             <h5>Image by: <a
-                                    href="${grailsApplication.config.collections.url + '/public/show/' + taxon.imageDataResourceUid}">${taxon.imageCreator}</a>
+                                    href="${grailsApplication.config.getProperty('collections.url') + '/public/show/' + taxon.imageDataResourceUid}">${taxon.imageCreator}</a>
                             </h5>
                         </g:if>
                         <g:if test="${ taxon.imageRights }">

@@ -50,7 +50,7 @@ class DownloadController {
     //offline generated field guide download
     def offline(String id) {
         if (id != null && id.matches("^[\\w-]+.pdf\$")) {
-            File myFile = new File(grailsApplication.config.fieldguide.store + File.separator + id)
+            File myFile = new File(grailsApplication.config.getProperty('fieldguide.store') + File.separator + id)
 
             render(file: myFile.newInputStream(), contentType: "application/pdf")
         } else {

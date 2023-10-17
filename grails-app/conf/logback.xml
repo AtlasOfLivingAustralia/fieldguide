@@ -11,6 +11,8 @@
         </encoder>
     </appender>
 
+    <logger name="au.org.ala.fieldguide" level="INFO" />
+
     <root level="warn">
         <appender-ref ref="STDOUT" />
     </root>

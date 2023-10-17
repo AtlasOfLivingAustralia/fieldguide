@@ -28,7 +28,7 @@ class GenerateController {
     def fieldguide() {
         Long id = Long.parseLong(request.getParameter("id"))
 
-        String outputDir = grailsApplication.config.fieldguide.store + File.separator
+        String outputDir = grailsApplication.config.getProperty('fieldguide.store') + File.separator
         String currentDay = DateFormatUtils.format(new Date(id), "ddMMyyyy")
         String pdfParam = currentDay + File.separator + "fieldguide" + id + ".pdf"
 
@@ -38,7 +38,7 @@ class GenerateController {
 
         Map map = new HashMap()
         map.put("title", json.title ? json.title : "Generated field guide")
-        map.put("link", json.link ? json.link : grailsApplication.config.fieldguide.url + "/guide/" + pdfParam)
+        map.put("link", json.link ? json.link : grailsApplication.config.getProperty('fieldguide.url') + "/guide/" + pdfParam)
         map.put("families", json.sortedTaxonInfo)
 
         def stream = params.stream ? params.stream : true
@@ -91,8 +91,8 @@ class GenerateController {
     @Produces("application/json")
     //initiate generation of an offline field guide
     def offline() {
-        if (grailsApplication.config.validateEmail &&
-                (grailsApplication.config.security.cas.enabled || grailsApplication.config.security.oidc.enabled)) {
+        if (grailsApplication.config.getProperty('validateEmail', boolean) &&
+                (grailsApplication.config.getProperty('security.cas.enabled', boolean) || grailsApplication.config.getProperty('security.oidc.enabled', boolean))) {
             // use logged in user's email
             String validEmail = authService.email
 
@@ -166,7 +166,7 @@ class GenerateController {
     }
 
     def cache(String id) {
-        def file = new File("${grailsApplication.config.fieldguide.store}/cache/${URLEncoder.encode(id, 'UTF-8').replace('/', '')}")
+        def file = new File("${grailsApplication.config.getProperty('fieldguide.store')}/cache/${URLEncoder.encode(id, 'UTF-8').replace('/', '')}")
         if (file.exists()) {
             render file: file.newInputStream(), contentType: 'image/jpeg'
         } else {
