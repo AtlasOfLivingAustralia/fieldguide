@@ -83,6 +83,10 @@ class GenerateController {
                                             schema = @Schema(implementation = FieldguideResponse)
                                     )
                             ]
+                    ),
+                    @ApiResponse(
+                            description = "no email provided",
+                            responseCode = "400"
                     )
             ],
             security = []
