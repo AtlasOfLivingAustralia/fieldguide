@@ -1,8 +1,8 @@
 package au.org.ala
 
+import com.amazonaws.services.s3.model.CannedAccessControlList
 import grails.converters.JSON
 import grails.util.Environment
-import grails.util.Holders
 import groovy.json.JsonSlurper
 import org.apache.commons.httpclient.HttpClient
 import org.apache.commons.httpclient.methods.PostMethod
@@ -16,6 +16,7 @@ class GenerateService {
     def grailsApplication
     def imageService
     def collectionsService
+    def amazonS3Service
 
     def generate(JSONObject json, String origFileRef) {
         long id = System.currentTimeMillis()
@@ -56,21 +57,31 @@ class GenerateService {
         String pthJson = outputDir + id + ".json"
         FileUtils.writeStringToFile(new File(pthJson), (json as JSON).toString())
 
-        def outputStream = FileUtils.openOutputStream(new File(pdfPath))
+        def pdfFile = new File(pdfPath)
+        def outputStream = FileUtils.openOutputStream(pdfFile)
 
-        InputStream stream = new URL(grailsApplication.config.getProperty('fieldguide.url') + '/generate/fieldguide?id=' + id).openStream()
+        def url = grailsApplication.config.getProperty('fieldguide.url') + '/generate/fieldguide?id=' + id
+
+        InputStream stream = new URL(url).openStream()
         outputStream << stream
         outputStream.flush()
         outputStream.close()
 
-        if (!new File(pdfPath).exists()) {
-            log.error "failed to generate pdf from html\nrequest JSON: " + pthJson + "\nHTML version: " + fieldGuideUrl
+        if (!pdfFile.exists()) {
+            log.error "failed to generate pdf from html\nrequest JSON: " + pthJson + "\nHTML version: " + url
 
             null
         } else {
             //was successful, no longer need json
             if (Environment.current == Environment.PRODUCTION) {
                 FileUtils.deleteQuietly(new File(pthJson))
+            }
+
+            // copy to S3
+            if (grailsApplication.config.getProperty('storage.provider') == 'S3') {
+                amazonS3Service.storeFile(fileRef, pdfFile, CannedAccessControlList.Private)
+
+                FileUtils.delete(pdfFile)
             }
 
             //file reference
