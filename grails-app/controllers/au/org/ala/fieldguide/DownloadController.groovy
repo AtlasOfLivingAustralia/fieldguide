@@ -44,6 +44,10 @@ class DownloadController {
                                     )
 
                             ]
+                    ),
+                    @ApiResponse(
+                            description = "Redirect to PDF",
+                            responseCode = "302"
                     )
             ],
             security = []
@@ -58,7 +62,7 @@ class DownloadController {
             // support switching of an instance to S3 without losing access to all previously generated local files
             if (!myFile.exists() && grailsApplication.config.getProperty('storage.provider') == 'S3') {
                 if (grailsApplication.config.getProperty('storage.provider') == 'S3') {
-                    response.status = 301
+                    response.status = 302
                     response.addHeader('Location', amazonS3Service.generatePresignedUrl(id, DateUtils.addHours(new Date(), grailsApplication.config.getProperty('s3.temporaryurl.duration', Integer.class))))
                 }
             } else {
