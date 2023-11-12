@@ -89,9 +89,18 @@ dependencies {
     implementation "commons-io:commons-io:2.10.0"
 
     // PDF
-    implementation("org.xhtmlrenderer:core-renderer:R8")
-    implementation("com.lowagie:itext:2.1.0")
-    implementation 'org.grails.plugins:rendering:2.0.3'
+    implementation("org.xhtmlrenderer:core-renderer:R8") {
+        exclude module: "bcprov-jdk14"
+        exclude module: "bcmail-jdk14"
+    }
+    implementation("com.lowagie:itext:2.1.0") {
+        exclude module: "bcprov-jdk14"
+        exclude module: "bcmail-jdk14"
+    }
+    implementation('org.grails.plugins:rendering:2.0.3') {
+        exclude module: "bcprov-jdk14"
+        exclude module: "bcmail-jdk14"
+    }
 
     // plugins for the compile step
     implementation 'org.grails.plugins:mail:3.0.0'
@@ -99,6 +108,8 @@ dependencies {
     implementation "org.grails.plugins:ala-auth:$alaSecurityLibsVersion"
     implementation "org.grails.plugins:ala-ws-security-plugin:$alaSecurityLibsVersion"
     implementation "org.grails.plugins:ala-ws-plugin:$alaSecurityLibsVersion"
+
+    implementation 'org.grails.plugins:aws-sdk-s3:2.4.8'
 }
 
 bootRun {
