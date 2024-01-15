@@ -79,7 +79,7 @@ dependencies {
     implementation 'dk.glasius:external-config:3.1.1'
 
     // plugins needed at runtime but not for compilation
-    implementation 'au.org.ala.plugins:openapi:1.1.0'
+    implementation 'au.org.ala.plugins:openapi:1.3.0'
 
     implementation "commons-httpclient:commons-httpclient:3.1"
     implementation "commons-io:commons-io:2.10.0"
