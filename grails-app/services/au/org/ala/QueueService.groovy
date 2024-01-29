@@ -103,7 +103,14 @@ class QueueService {
     def deleteFromDisk(String fileRef) {
         File queued = new File("/data/fieldguide/queue/${fileRef}.json")
         if (queued.exists()) {
-            FileUtils.deleteQuietly(queued)
+            // move to permanent directory, mostly for a lookup of filenames
+            File dir = new File(grailsApplication.config.getProperty('fieldguide.store'))
+            if (!dir.exists()) {
+                dir.mkdir()
+            }
+
+            File stored = new File("${grailsApplication.config.getProperty('fieldguide.store')}/${fileRef}.json")
+            FileUtils.moveFile(queued, stored)
         }
     }
 
@@ -117,6 +124,19 @@ class QueueService {
         order.add(params.fileRef.toString())
 
         status(params.fileRef.toString())
+    }
+
+    def storedFilename(String id) {
+        // get the stored filename, or just return the id
+        def file = new File("${grailsApplication.config.getProperty('fieldguide.store')}/${id}.json")
+        if (file.exists()) {
+            try {
+                def item = JSON.parse(file.text)
+                return item.file ?: id
+            } catch (ignored) {}
+        }
+
+        id
     }
 
     def status(String id) {
