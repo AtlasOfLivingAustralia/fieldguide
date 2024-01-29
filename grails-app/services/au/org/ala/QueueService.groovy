@@ -106,7 +106,7 @@ class QueueService {
             // move to permanent directory, mostly for a lookup of filenames
             File dir = new File(grailsApplication.config.getProperty('fieldguide.store'))
             if (!dir.exists()) {
-                dir.mkdir()
+                dir.mkdirs()
             }
 
             File stored = new File("${grailsApplication.config.getProperty('fieldguide.store')}/${fileRef}.json")
