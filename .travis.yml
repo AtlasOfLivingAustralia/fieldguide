@@ -10,6 +10,7 @@ branches:
     - feature/grails5
     - feature/gateway_urls
     - feature/grails6-upgrade
+    - feature/new-pdf
 
 before_install:
   - sudo mkdir -p /data/fieldguide

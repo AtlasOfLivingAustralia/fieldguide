@@ -1,16 +1,22 @@
 @page {
-    size: 210mm 297mm;
+    size: 310mm 397mm;
+    color: white;
+
+    @top-center {
+        vertical-align: top;
+        width: 120%;
+        content: element(header) element(page-header);
+    }
 
     @bottom-center {
         vertical-align: bottom;
         content: element(footer);
         padding-bottom: 10px;
     }
-
-    margin-top: 1cm;
-    margin-left: 0cm;
-    margin-right: 0cm;
+    margin-top: 0px;
     margin-bottom: 2cm;
+    margin-right: 0px;
+    margin-left: 0px;
 }
 div.footer {
     font-size: 11px;
@@ -18,6 +24,19 @@ div.footer {
     display: block;
     position: running(footer);
     margin-left: 0px;
+}
+
+div.page-header {
+    font-size: 11px;
+    display: block;
+    position: running(header);
+    margin-left: 0px;
+}
+div.header {
+    display: block;
+    position: running(header);
+    margin-left: 0px;
+    margin-top: 0px;
 }
 
 #pagenumber:before {
@@ -29,15 +48,15 @@ div.footer {
 }
 
 html * {
-    font-family: Helvetica, Dialog;
-	margin: 0;
+    font-family: Roboto;
+	margin-top: 0px;
 }
 
 /* Top link */
 body > a {
     font-style: italic;
     font-size: 14px;
-    color: gray;
+    color: black;
     margin-left: 30px;
     font-weight: bold;
     text-decoration: none;
@@ -45,15 +64,14 @@ body > a {
 
 /* Family */
 div > h2 {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 30px;
+    font-size: 30px;
+    margin-bottom: 5px;
 }
 
 /* Common name */
 div > h3 {
-    font-size: 11px;
-    font-weight: bold;
+    font-size: 25px;
+    font-weight: normal;
 }
 
 /* Scientific name */
@@ -66,10 +84,19 @@ div > h4 {
 
 /* Attribution title */
 body > h1 {
-    font-size: 24px;
+    font-size: 40px;
+    margin-bottom: 10px;
+    margin-left: 30px;
+}
+
+/* Attribution title for header */
+body > h6 {
+    font-size: 34px;
     font-weight: bold;
+    color: darkorange;
     margin-bottom: 30px;
     margin-left: 30px;
+    margin-right: 60px;
     page-break-before: always;
 }
 
@@ -82,7 +109,7 @@ div > h5 {
 
 /* Attribution links */
 h5 > a {
-    color: blue;
+    color: black;
     text-decoration: underline;
     font-size: 11px;
     font-weight: normal;
@@ -92,14 +119,8 @@ h5 > a {
 
 /* taxon images */
 div > img {
-    margin-top: 10px;
-    vertical-align: text-top;
-    margin-left: 30px;
-    width: 35%;
+
 }
 
 body > div {
-    margin-top: 15px;
-    margin-left: 30px;
-    page-break-inside: avoid;
 }
