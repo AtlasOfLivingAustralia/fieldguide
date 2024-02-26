@@ -4,23 +4,12 @@
 <html>
     <head>
         <title>Field guide produced by ALA using aggregated sources</title>
-
         <link rel="stylesheet" href="${grailsApplication.config.getProperty('fieldguide.url')}/static/css/fieldguide.css" type="text/css"></link>
-        <style>
-        /* Define a custom class for bigger font size and different color */
-        .custom-text {
-            font-size: 90px;
-            font-height: 50px;
-            font-family: Roboto, Dialog;
-        }
-        </style>
     </head>
 
-    <body style="margin-top: 260px;margin-left: 0px">
+    <body style="margin-top: 150px;margin-left: 0px">
         <div class='header' style="margin-top: 0px;margin-left: 0px">
-            <img src="${grailsApplication.config.getProperty('fieldguide.url')}/static/images/field-guide-banner-pg1.png" width="100%" height="60px" style="margin-bottom: 20px;margin-top: 0px"/><br/>
-            <img src="${grailsApplication.config.getProperty('fieldguide.url')}/static/images/ALA_Logo_Stacked_RGB.png" width="30%" style="float:right;margin-right:20px"/>
-            <div style="margin-left:30px;color: #ff0900;" class='custom-text' width="20%" height="40px">Field Guide <h2 style="color:black">Species photos and maps</h2></div>
+            <img src="${grailsApplication.config.getProperty('fieldguide.url')}/static/images/field-guide-header-pg1.png" width="100%" height="100%" style="margin-bottom: 10px;margin-top: 0px"/>
         </div>
 
         <div class='footer' style="margin-top: 15px;margin-left: 30px">r
@@ -52,10 +41,13 @@
                         <g:if test="${i == 0}">
                             <%
                                 iterationCounter++;
-                                if(iterationCounter ==1){
+                                if((iterationCounter ==1) || (iterationCounter ==2)){
                                     isFristPage=true;
+                            %>
+                            <%
                                 }
-                                if ((iterationCounter >2) && (iterationCounter % 2 == 1)) {
+
+                                if ((iterationCounter >2) && (iterationCounter % 2 == 1) && (!isFristPage)) {
                                     flag=true;
                                     isFristPage=false;
                             %>
@@ -65,8 +57,8 @@
                                      width="100%" height="100%" style="float:left;margin-bottom:30px"/>
                             </div>
                             <div style="page-break-after: always;margin-bottom: 20px;margin-top:180px"></div>
-                            <h1 style="page-break-after: always;margin-top: 135px;font-weight: normal">Family: <b>${family.key}</b></h1>
-                            <hr style="margin-top: 190px"/>
+                            <h1 style="page-break-after: always;margin-top: 80px;font-weight: normal">Family: <b>${family.key}</b></h1>
+                            <hr style="margin-top: 160px"/>
                             <%
                                 }else{
                                     flag=false;
@@ -100,17 +92,38 @@
 
     <pagebreaks/>
     <pagebreaks/>
+    <%
+        int attributionCounter = 0;
+        boolean isFlag=false;
+    %>
     <div class='page-header'>
         <img src="${grailsApplication.config.getProperty('fieldguide.url')}/static/images/field-guide-banner-other-pages.png"
              width="100%" height="100%" style="float:left;margin-bottom:30px"/>
     </div>
     <div style="margin-left:10px;margin-bottom: 150px;margin-top: 300px"></div>
-        <h1 style="margin-left:50px;page-break-before: always;margin-top: 150px">Attribution</h1>
+        <h1 style="margin-left:50px;page-break-before: always;margin-top: 80px">Attribution</h1>
         <hr/>
         <g:each var="family" in="${data.families}">
             <g:each var="commonName" in="${family.value}" status="i" >
                 <g:each var="taxon" in="${commonName.value}" status="j">
                     <div style="margin-top: 35px;margin-left: 50px;margin-bottom: 20px">
+                       <%
+                            attributionCounter++;
+                            if((attributionCounter>=6) && (attributionCounter % 6 ==1)){
+                                isFlag=true;
+                        %>
+                        <br/>
+                        <div style="page-break-after: always;margin-bottom: 20px;margin-top:180px"></div>
+                        <div class='page-header'>
+                            <img src="${grailsApplication.config.getProperty('fieldguide.url')}/static/images/field-guide-banner-other-pages.png"
+                                 width="100%" height="100%" style="float:left;margin-bottom:50px"/>
+                        </div>
+                        <br/>
+                        <%
+                            } else {
+                                isFlag = false;
+                            }
+                        %>
                         <h2>${taxon.scientificName}</h2>
                         <g:if test="${taxon.datasetName}">
                             <h3>Taxonomic information supplied by: <a

@@ -3,9 +3,11 @@
     color: white;
 
     @top-center {
+        margin-top: 0px;
         vertical-align: top;
         width: 120%;
         content: element(header) element(page-header);
+        height: 150px;
     }
 
     @bottom-center {
@@ -13,10 +15,13 @@
         content: element(footer);
         padding-bottom: 10px;
     }
-    margin-top: 0px;
+    margin-top: 120px;
     margin-bottom: 2cm;
     margin-right: 0px;
     margin-left: 0px;
+    font-family: Arial;
+
+
 }
 div.footer {
     font-size: 11px;
@@ -48,7 +53,7 @@ div.header {
 }
 
 html * {
-    font-family: Roboto;
+    font-family: Arial;
 	margin-top: 0px;
 }
 
@@ -117,10 +122,6 @@ h5 > a {
     margin-left: 0px;
 }
 
-/* taxon images */
-div > img {
-
-}
 
 body > div {
 }
