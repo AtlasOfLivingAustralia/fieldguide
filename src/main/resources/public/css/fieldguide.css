@@ -125,3 +125,122 @@ h5 > a {
 
 body > div {
 }
+
+.mainHeader{
+    margin-top: 0px;
+    margin-left: 0px;
+}
+.headerDiv{
+    float:left;
+    margin-left:150px;
+}
+.headerText{
+    font-style: italic;
+    font-weight: bold;
+}
+.headerLink{
+    margin-top:20px;
+    color:black;
+}
+.secondHeader{
+    float:left;
+    margin-bottom:30px;
+}
+.pagebreakDiv{
+    page-break-after: always;
+    margin-bottom: 20px;
+    margin-top:180px;
+}
+.pagebreakH1{
+    page-break-after: always;
+    margin-top: 80px;
+    font-weight: normal;
+}
+.hrPagebreak{
+    margin-top: 140px;
+}
+.h2SpeciesPageBreak{
+    margin-top:10px;
+    margin-left:20px;
+    font-weight: normal;
+}
+.h2ScientificNamePageBreak{
+    margin-top:5px;
+    margin-left:20px;
+    font-weight: normal;
+}
+.h2Species{
+    margin-left:20px;
+    font-weight: normal;
+}
+.h2ScientificName{
+    margin-left:20px;
+    font-weight: normal;
+}
+.imgThumbnail{
+    height:300px;
+    margin-top: 25px;
+    margin-bottom: 15px;
+    margin-left: 50px;
+    margin-right: 30px;
+}
+.densityMap{
+    margin-top: 25px;
+    margin-bottom: 5px;
+    margin-left: 30px;
+}
+.densityLegend{
+    margin-top: 25px;
+    margin-bottom: 15px;
+    margin-left: 10px;
+}
+.attHeader{
+    float:left;
+    margin-bottom:30px;
+}
+.attDiv{
+    margin-left:10px;
+    margin-bottom: 150px;
+    margin-top: 300px;
+}
+.h1Attr{
+    margin-left:50px;
+    page-break-before: always;
+    margin-top: 40px;
+}
+.attrAttributeDiv{
+    margin-top: 35px;
+    margin-left: 50px;
+    margin-bottom: 20px;
+}
+.attrAttributePageBreak{
+    page-break-after: always;
+    margin-bottom: 20px;
+    margin-top:180px;
+}
+.taxonDiv{
+    margin-top:60px;
+    width:90%;
+    margin-left:50px;
+    margin-bottom:50px;
+}
+.footerDiv{
+    margin-top: 15px;
+    margin-left: 30px;
+}
+.alaSite{
+    float:left;
+    margin-left:20px;
+}
+.pageNum{
+    float:right;
+    margin-right:10px;
+}
+.bodyClass{
+    margin-top: 150px;
+    margin-left: 0px;
+}
+.headerImg{
+    margin-bottom: 10px;
+    margin-top: 0px;
+}

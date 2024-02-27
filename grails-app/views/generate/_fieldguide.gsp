@@ -7,22 +7,22 @@
         <link rel="stylesheet" href="${grailsApplication.config.getProperty('fieldguide.url')}/static/css/fieldguide.css" type="text/css"></link>
     </head>
 
-    <body style="margin-top: 150px;margin-left: 0px">
-        <div class='header' style="margin-top: 0px;margin-left: 0px">
-            <img src="${grailsApplication.config.getProperty('fieldguide.url')}/static/images/field-guide-header-pg1.png" width="100%" height="100%" style="margin-bottom: 10px;margin-top: 0px"/>
+    <body class="bodyClass">
+        <div class='header mainHeader'>
+            <img src="${grailsApplication.config.getProperty('fieldguide.url')}/static/images/field-guide-header-pg1.png" width="100%" height="100%" class="headerImg"/>
         </div>
 
-        <div class='footer' style="margin-top: 15px;margin-left: 30px">r
-            <div style="float:left;margin-left:20px">www.ala.org.au</div>
-            <div style="float:right;margin-right:10px">Page <span id="pagenumber"></span> of <span id="pagecount"></span></div>
+        <div class='footer footerDiv'>
+            <div class="alaSite">www.ala.org.au</div>
+            <div class="pageNum">Page <span id="pagenumber"></span> of <span id="pagecount"></span></div>
         </div>
     <%
         java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd MMMM yyyy");
         String formattedDate = sdf.format(new java.util.Date());
     %>
-    <div style="float:left; margin-left:150px">
-        <h3 style="font-style: italic;font-weight: bold">This PDF was generated on <span>${formattedDate}</span>.
-            <a style="margin-top:20px; color:black" href="${data.link}"><u>View the original search query</u></a>
+    <div class="headerDiv">
+        <h3 class="headerText">This PDF was generated on <span>${formattedDate}</span>.
+            <a class="headerLink" href="${data.link}"><u>View the original search query.</u></a>
         </h3><br/>
     </div>
 
@@ -37,7 +37,7 @@
         <g:each var="family" in="${data.families}">
            <g:each var="commonName" in="${family.value}" status="i" >
                 <g:each var="taxon" in="${commonName.value}" status="j">
-                    <div style="margin-top:60px;width:90%;margin-left:50px;margin-bottom:50px">
+                    <div class="taxonDiv">
                         <g:if test="${i == 0}">
                             <%
                                 iterationCounter++;
@@ -54,11 +54,11 @@
 
                             <div class='page-header'>
                                 <img src="${grailsApplication.config.getProperty('fieldguide.url')}/static/images/field-guide-banner-other-pages.png"
-                                     width="100%" height="100%" style="float:left;margin-bottom:30px"/>
+                                     width="100%" height="100%" class="secondHeader"/>
                             </div>
-                            <div style="page-break-after: always;margin-bottom: 20px;margin-top:180px"></div>
-                            <h1 style="page-break-after: always;margin-top: 80px;font-weight: normal">Family: <b>${family.key}</b></h1>
-                            <hr style="margin-top: 160px"/>
+                            <div class="pagebreakDiv"></div>
+                            <h1 class="pagebreakH1">Family: <b>${family.key}</b></h1>
+                            <hr class="hrPagebreak"/>
                             <%
                                 }else{
                                     flag=false;
@@ -72,19 +72,19 @@
 
                         </g:if>
                         <g:if test="${(j == 0) && (flag)}">
-                            <h2 style="margin-top:30px; margin-left:20px;font-weight: normal"> Species: <a style="color: black" href="${grailsApplication.config.getProperty('fieldguide.species.url')}/${taxon.guid}"><b>${commonName.key}</b></a></h2>
-                            <h2 style="margin-top:5px;margin-left:20px;font-weight: normal">Scientific name:<b>${taxon.scientificName}</b></h2>
+                            <h2 class="h2SpeciesPageBreak"> Species: <a style="color: black" href="${grailsApplication.config.getProperty('fieldguide.species.url')}/${taxon.guid}"><b>${commonName.key}</b></a></h2>
+                            <h2 class="h2ScientificNamePageBreak">Scientific name:<b>${taxon.scientificName}</b></h2>
                         </g:if>
                         <g:else>
-                            <h2 style="margin-left:20px;font-weight: normal"> Species: <a style="color: black" href="${grailsApplication.config.getProperty('fieldguide.species.url')}/${taxon.guid}"><b>${commonName.key}</b></a></h2>
-                            <h2 style="margin-left:20px;font-weight: normal">Scientific name:<b>${taxon.scientificName}</b></h2>
+                            <h2 class="h2Species"> Species: <a style="color: black" href="${grailsApplication.config.getProperty('fieldguide.species.url')}/${taxon.guid}"><b>${commonName.key}</b></a></h2>
+                            <h2 class="h2ScientificName">Scientific name:<b>${taxon.scientificName}</b></h2>
                         </g:else>
 
                         <g:if test="${taxon.largeImageUrl != null}">
-                            <img src="file://${grailsApplication.config.getProperty('fieldguide.store')}/${taxon.thumbnail.replace('?id=','/')}"  width="30%" style="height:300px;margin-top: 25px;margin-bottom: 15px;margin-left: 50px;margin-right: 30px"/>
+                            <img src="file://${grailsApplication.config.getProperty('fieldguide.store')}/${taxon.thumbnail.replace('?id=','/')}"  width="35%" class="imgThumbnail"/>
                         </g:if>
-                        <img src="file://${grailsApplication.config.getProperty('fieldguide.store')}/${taxon.densitymap.replace('?id=','/')}" width="35%" style="margin-top: 25px;margin-bottom: 5px;margin-left: 30px"/>
-                        <img src="file://${grailsApplication.config.getProperty('fieldguide.store')}/${taxon.densitylegend.replace('?id=','/')}" width="100%"  height="250px" style="width:95px;margin-top: 25px;margin-bottom: 15px;margin-left: 30px"/>
+                        <img src="file://${grailsApplication.config.getProperty('fieldguide.store')}/${taxon.densitymap.replace('?id=','/')}" width="30%" class="densityMap"/>
+                        <img src="file://${grailsApplication.config.getProperty('fieldguide.store')}/${taxon.densitylegend.replace('?id=','/')}" width="10%"  height="250px" class="densityLegend"/>
                     </div>
                 </g:each>
             </g:each>
@@ -98,25 +98,25 @@
     %>
     <div class='page-header'>
         <img src="${grailsApplication.config.getProperty('fieldguide.url')}/static/images/field-guide-banner-other-pages.png"
-             width="100%" height="100%" style="float:left;margin-bottom:30px"/>
+             width="100%" height="100%" class="attHeader"/>
     </div>
-    <div style="margin-left:10px;margin-bottom: 150px;margin-top: 300px"></div>
-        <h1 style="margin-left:50px;page-break-before: always;margin-top: 80px">Attribution</h1>
+    <div class="attDiv"></div>
+        <h1 class="h1Attr">Attribution</h1>
         <hr/>
         <g:each var="family" in="${data.families}">
             <g:each var="commonName" in="${family.value}" status="i" >
                 <g:each var="taxon" in="${commonName.value}" status="j">
-                    <div style="margin-top: 35px;margin-left: 50px;margin-bottom: 20px">
+                    <div class="attrAttributeDiv">
                        <%
                             attributionCounter++;
                             if((attributionCounter>=6) && (attributionCounter % 6 ==1)){
                                 isFlag=true;
                         %>
                         <br/>
-                        <div style="page-break-after: always;margin-bottom: 20px;margin-top:180px"></div>
+                        <div class="attrAttributePageBreak"></div>
                         <div class='page-header'>
                             <img src="${grailsApplication.config.getProperty('fieldguide.url')}/static/images/field-guide-banner-other-pages.png"
-                                 width="100%" height="100%" style="float:left;margin-bottom:50px"/>
+                                 width="100%" height="100%" class="attHeader"/>
                         </div>
                         <br/>
                         <%
