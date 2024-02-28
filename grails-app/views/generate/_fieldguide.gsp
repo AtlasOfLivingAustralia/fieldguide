@@ -12,8 +12,8 @@
             <img src="${grailsApplication.config.getProperty('fieldguide.url')}/static/images/field-guide-header-pg1.png" width="100%" height="100%" class="headerImg"/>
         </div>
 
-        <div class='footer footerDiv'>
-            <div class="alaSite">www.ala.org.au</div>
+        <div class="footer footerDiv">
+            <div class="alaSite"><a href="https://www.ala.org.au">Atlas of Living Australia</a> – Field Guide</div>
             <div class="pageNum">Page <span id="pagenumber"></span> of <span id="pagecount"></span></div>
         </div>
     <%
@@ -64,7 +64,7 @@
                                     flag=false;
                                     isFristPage=false;
                             %>
-                            <h1 style="font-weight: normal">Family: <b>${family.key}</b></h1>
+                            <h1 class="familyNormal">Family: <b>${family.key}</b></h1>
                             <hr/>
                             <%
                                 }
@@ -72,19 +72,19 @@
 
                         </g:if>
                         <g:if test="${(j == 0) && (flag)}">
-                            <h2 class="h2SpeciesPageBreak"> Species: <a style="color: black" href="${grailsApplication.config.getProperty('fieldguide.species.url')}/${taxon.guid}"><b>${commonName.key}</b></a></h2>
-                            <h2 class="h2ScientificNamePageBreak">Scientific name:<b>${taxon.scientificName}</b></h2>
+                            <h2 class="h2SpeciesPageBreak"> Species: <a class="classBlack" href="${grailsApplication.config.getProperty('fieldguide.species.url')}/${taxon.guid}"><b>${commonName.key}</b></a></h2>
+                            <h2 class="h2ScientificNamePageBreak">Scientific name: <b>${taxon.scientificName}</b></h2>
                         </g:if>
                         <g:else>
-                            <h2 class="h2Species"> Species: <a style="color: black" href="${grailsApplication.config.getProperty('fieldguide.species.url')}/${taxon.guid}"><b>${commonName.key}</b></a></h2>
-                            <h2 class="h2ScientificName">Scientific name:<b>${taxon.scientificName}</b></h2>
+                            <h2 class="h2Species"> Species: <a class="classBlack" href="${grailsApplication.config.getProperty('fieldguide.species.url')}/${taxon.guid}"><b>${commonName.key}</b></a></h2>
+                            <h2 class="h2ScientificName">Scientific name: <b>${taxon.scientificName}</b></h2>
                         </g:else>
 
                         <g:if test="${taxon.largeImageUrl != null}">
                             <img src="file://${grailsApplication.config.getProperty('fieldguide.store')}/${taxon.thumbnail.replace('?id=','/')}"  width="35%" class="imgThumbnail"/>
                         </g:if>
-                        <img src="file://${grailsApplication.config.getProperty('fieldguide.store')}/${taxon.densitymap.replace('?id=','/')}" width="30%" class="densityMap"/>
-                        <img src="file://${grailsApplication.config.getProperty('fieldguide.store')}/${taxon.densitylegend.replace('?id=','/')}" width="10%"  height="250px" class="densityLegend"/>
+                        <img src="file://${grailsApplication.config.getProperty('fieldguide.store')}/${taxon.densitymap.replace('?id=','/')}" width="30%" height="40%" class="densityMap"/>
+                        <img src="file://${grailsApplication.config.getProperty('fieldguide.store')}/${taxon.densitylegend.replace('?id=','/')}" width="20%"  height="20%" class="densityLegend"/>
                     </div>
                 </g:each>
             </g:each>

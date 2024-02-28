@@ -8,18 +8,20 @@
         width: 120%;
         content: element(header) element(page-header);
         height: 150px;
+        font-family: Roboto,Dialog;
     }
 
     @bottom-center {
         vertical-align: bottom;
         content: element(footer);
         padding-bottom: 10px;
+        font-family: Roboto,Dialog;
     }
     margin-top: 120px;
     margin-bottom: 2cm;
     margin-right: 0px;
     margin-left: 0px;
-    font-family: Calibri;
+    font-family: Roboto,Dialog;
 
 
 }
@@ -29,6 +31,7 @@ div.footer {
     display: block;
     position: running(footer);
     margin-left: 0px;
+    font-family: Roboto,Dialog;
 }
 
 div.page-header {
@@ -53,7 +56,7 @@ div.header {
 }
 
 html * {
-    font-family: Arial;
+    font-family: Roboto,Dialog;
 	margin-top: 0px;
 }
 
@@ -71,12 +74,14 @@ body > a {
 div > h2 {
     font-size: 30px;
     margin-bottom: 5px;
+    font-family: Roboto,Dialog;
 }
 
 /* Common name */
 div > h3 {
     font-size: 25px;
     font-weight: normal;
+    font-family: Roboto,Dialog;
 }
 
 /* Scientific name */
@@ -85,6 +90,7 @@ div > h4 {
     font-weight: normal;
     font-style: italic;
     margin-bottom: 10px;
+    font-family: Roboto,Dialog;
 }
 
 /* Attribution title */
@@ -92,6 +98,7 @@ body > h1 {
     font-size: 40px;
     margin-bottom: 10px;
     margin-left: 30px;
+    font-family: Roboto,Dialog;
 }
 
 /* Attribution title for header */
@@ -103,6 +110,7 @@ body > h6 {
     margin-left: 30px;
     margin-right: 60px;
     page-break-before: always;
+    font-family: Roboto,Dialog;
 }
 
 /* Attribution details */
@@ -110,6 +118,7 @@ div > h5 {
     font-size: 11px;
     font-weight: normal;
     margin-top: 4px;
+    font-family: Roboto,Dialog;
 }
 
 /* Attribution links */
@@ -120,6 +129,7 @@ h5 > a {
     font-weight: normal;
     font-style: normal;
     margin-left: 0px;
+    font-family: Roboto,Dialog;
 }
 
 
@@ -133,14 +143,17 @@ body > div {
 .headerDiv{
     float:left;
     margin-left:150px;
+    font-family: Roboto,Dialog;
 }
 .headerText{
     font-style: italic;
     font-weight: bold;
+    font-family: Roboto,Dialog;
 }
 .headerLink{
-    margin-top:20px;
+    margin-top:10px;
     color:black;
+    font-family: Roboto,Dialog;
 }
 .secondHeader{
     float:left;
@@ -155,27 +168,35 @@ body > div {
     page-break-after: always;
     margin-top: 80px;
     font-weight: normal;
+    font-family: Roboto,Dialog;
 }
 .hrPagebreak{
     margin-top: 140px;
+}
+.familyNormal{
+    font-weight: normal;
 }
 .h2SpeciesPageBreak{
     margin-top:10px;
     margin-left:20px;
     font-weight: normal;
+    font-family: Roboto,Dialog;
 }
 .h2ScientificNamePageBreak{
     margin-top:5px;
     margin-left:20px;
     font-weight: normal;
+    font-family: Roboto,Dialog;
 }
 .h2Species{
     margin-left:20px;
     font-weight: normal;
+    font-family: Roboto,Dialog;
 }
 .h2ScientificName{
     margin-left:20px;
     font-weight: normal;
+    font-family: Roboto,Dialog;
 }
 .imgThumbnail{
     height:300px;
@@ -185,14 +206,14 @@ body > div {
     margin-right: 30px;
 }
 .densityMap{
-    margin-top: 25px;
+    margin-top: 15px;
     margin-bottom: 5px;
     margin-left: 30px;
 }
 .densityLegend{
     margin-top: 25px;
     margin-bottom: 15px;
-    margin-left: 10px;
+
 }
 .attHeader{
     float:left;
@@ -207,6 +228,7 @@ body > div {
     margin-left:50px;
     page-break-before: always;
     margin-top: 40px;
+    font-family: Roboto,Dialog;
 }
 .attrAttributeDiv{
     margin-top: 35px;
@@ -227,20 +249,27 @@ body > div {
 .footerDiv{
     margin-top: 15px;
     margin-left: 30px;
+    font-family: Roboto,Dialog;
 }
 .alaSite{
     float:left;
     margin-left:20px;
+    font-family: Roboto,Dialog;
 }
 .pageNum{
     float:right;
     margin-right:10px;
+    font-family: Roboto,Dialog;
 }
 .bodyClass{
     margin-top: 150px;
     margin-left: 0px;
+    font-family: Roboto,Dialog;
 }
 .headerImg{
     margin-bottom: 10px;
     margin-top: 0px;
+}
+.classBlack{
+    color: black;
 }
