@@ -33,7 +33,7 @@
         <g:each var="family" in="${data.families}">
            <g:each var="commonName" in="${family.value}" status="i" >
                 <g:each var="taxon" in="${commonName.value}" status="j">
-                    <div class="taxonDiv parentContainer">
+                    <div class="taxonDiv">
                         <g:if test="${i == 0}">
                             <h2 class="familyNormal">Family: <b class="upper">${family.key}</b></h2>
                             <hr class="hrClass"/>
@@ -43,10 +43,10 @@
                         </g:if>
                            <h2 class="h2ScientificName">Scientific name: <b><i>${taxon.scientificName}</i></b></h2>
                         <g:if test="${taxon.largeImageUrl != null}">
-                            <img src="file://${grailsApplication.config.getProperty('fieldguide.store')}/${taxon.thumbnail.replace('?id=','/')}"  width="37%" class="imgThumbnail"/>
+                            <img src="file://${grailsApplication.config.getProperty('fieldguide.store')}/${taxon.thumbnail.replace('?id=','/')}" width="35%" class="imgThumbnail"/>
                         </g:if>
-                        <img src="file://${grailsApplication.config.getProperty('fieldguide.store')}/${taxon.densitymap.replace('?id=','/')}" width="30%" height="45%" class="densityMap parentContainer"/>
-                        <img src="file://${grailsApplication.config.getProperty('fieldguide.store')}/${taxon.densitylegend.replace('?id=','/')}" width="18%"  height="20%" class="densityLegend parentContainer"/>
+                        <img src="file://${grailsApplication.config.getProperty('fieldguide.store')}/${taxon.densitymap.replace('?id=','/')}" width="30%" class="densityMap"/>
+                        <img src="file://${grailsApplication.config.getProperty('fieldguide.store')}/${taxon.densitylegend.replace('?id=','/')}" class="densityLegend"/>
                     </div>
                 </g:each>
             </g:each>

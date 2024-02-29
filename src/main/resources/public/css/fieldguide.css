@@ -151,30 +151,23 @@ h5 > a {
 }
 .h2ScientificName{
     margin-left:20px;
+    margin-bottom:20px;
     font-weight: normal;
     font-family: Roboto,Dialog;
 }
 .imgThumbnail{
-    height:250px;
-    margin-top: 15px;
     margin-bottom: 10px;
     margin-left: 20px;
-    margin-right: 30px;
-}
-.parentContainer {
-    display: flex;
-    align-items: flex-start; /* Align items to the start (top) */
+    vertical-align: text-top;
 }
 .densityMap{
-    margin-top: 0px;
-    margin-bottom: 15px;
     margin-left: 30px;
-    padding-bottom: 65px;
+    vertical-align: text-top;
 }
 .densityLegend{
-    margin-top: 0px;
-    margin-bottom: 15px;
-    padding-bottom: 65px;
+    width:100px;
+    margin-left: 30px;
+    vertical-align: text-top;
 }
 .attHeader{
     float:left;
