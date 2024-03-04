@@ -43,7 +43,7 @@
                         </g:if>
                            <h2 class="h2ScientificName">Scientific name: <b><i>${taxon.scientificName}</i></b></h2>
                         <g:if test="${taxon.largeImageUrl != null}">
-                            <img src="file://${grailsApplication.config.getProperty('fieldguide.store')}/${taxon.thumbnail.replace('?id=','/')}" width="35%" class="imgThumbnail"/>
+                            <img src="file://${grailsApplication.config.getProperty('fieldguide.store')}/${taxon.thumbnail.replace('?id=','/')}" width="333px" height="250px" class="imgThumbnail"/>
                         </g:if>
                         <img src="file://${grailsApplication.config.getProperty('fieldguide.store')}/${taxon.densitymap.replace('?id=','/')}" width="30%" class="densityMap"/>
                         <img src="file://${grailsApplication.config.getProperty('fieldguide.store')}/${taxon.densitylegend.replace('?id=','/')}" class="densityLegend"/>
