@@ -144,14 +144,15 @@ h5 > a {
     page-break-inside: avoid;
 }
 .h2Species{
-    margin-top:20px;
+    margin-top:0px;
+    margin-bottom:30px;
     margin-left:20px;
     font-weight: normal;
     font-family: Roboto,Dialog;
 }
 .h2ScientificName{
     margin-left:20px;
-    margin-bottom:20px;
+    margin-bottom:0px;
     font-weight: normal;
     font-family: Roboto,Dialog;
 }

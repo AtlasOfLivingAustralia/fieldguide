@@ -167,6 +167,10 @@ class GenerateService {
 
         def taxonProfilesAll = new JsonSlurper().parseText(text).searchDTOList
         def taxonProfiles = []
+        def maxTaxonHeight = 0
+        def maxTaxonWidth = 0
+        def imgH = 0
+        def imgW = 0
 
         //add image metadata
         taxonProfilesAll.each { taxon ->
@@ -176,6 +180,31 @@ class GenerateService {
                     taxon.imageCreator = imageMetadata?.creator
                     taxon.imageDataResourceUid = imageMetadata?.dataResourceUid
                     taxon.imageRights = imageMetadata?.rights
+                    taxon.width = imageMetadata?.width
+                    taxon.height = imageMetadata?.height
+
+                    maxTaxonHeight = 300
+                    maxTaxonWidth = 260
+                    if(imageMetadata?.height==null){
+                        imgH=maxTaxonHeight
+                    }else{
+                        imgH = imageMetadata?.height
+                    }
+                    if(imageMetadata?.width==null){
+                        imgW=maxTaxonWidth
+                    }else{
+                        imgW = imageMetadata?.width
+                    }
+
+                    if (imgW / (double) imgH > maxTaxonWidth / (double) maxTaxonHeight) {
+                        // limit by width
+                        taxon.width = maxTaxonWidth
+                        taxon.height = imgH / (double) imgW * taxon.width
+                    } else {
+                        // limit by height
+                        taxon.height = maxTaxonHeight
+                        taxon.width = imgW / (double) imgH * taxon.height
+                    }
 
                     if (taxon?.imageDataResourceUid) {
                         def imageDataResourceMetadata = collectionsService.getInfo(taxon.imageDataResourceUid)

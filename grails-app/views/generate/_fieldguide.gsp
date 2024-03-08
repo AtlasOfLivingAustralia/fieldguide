@@ -38,12 +38,12 @@
                             <h2 class="familyNormal">Family: <b class="upper">${family.key}</b></h2>
                             <hr class="hrClass"/>
                         </g:if>
+                        <h2 class="h2ScientificName">Scientific name: <a class="classBlack" href="${grailsApplication.config.getProperty('fieldguide.species.url')}/${taxon.guid}"><b><i>${taxon.scientificName}</i></b></a></h2>
                         <g:if test="${commonName.value}">
-                            <h2 class="h2Species">Species: <a class="classBlack" href="${grailsApplication.config.getProperty('fieldguide.species.url')}/${taxon.guid}"><b>${commonName.key}</b></a></h2>
+                            <h2 class="h2Species"><b>${commonName.key}</b></h2>
                         </g:if>
-                           <h2 class="h2ScientificName">Scientific name: <b><i>${taxon.scientificName}</i></b></h2>
                         <g:if test="${taxon.largeImageUrl != null}">
-                            <img src="file://${grailsApplication.config.getProperty('fieldguide.store')}/${taxon.thumbnail.replace('?id=','/')}" width="333px" height="250px" class="imgThumbnail"/>
+                            <img src="file://${grailsApplication.config.getProperty('fieldguide.store')}/${taxon.thumbnail.replace('?id=','/')}" width="${taxon.width}px" height="${taxon.height}px" class="imgThumbnail"/>
                         </g:if>
                         <img src="file://${grailsApplication.config.getProperty('fieldguide.store')}/${taxon.densitymap.replace('?id=','/')}" width="30%" class="densityMap"/>
                         <img src="file://${grailsApplication.config.getProperty('fieldguide.store')}/${taxon.densitylegend.replace('?id=','/')}" class="densityLegend"/>
