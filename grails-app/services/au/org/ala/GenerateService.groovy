@@ -94,6 +94,8 @@ class GenerateService {
     def cacheImages(json) {
         def cacheDir = "${grailsApplication.config.getProperty('fieldguide.store')}/cache/"
         def cacheDirFile = new File(cacheDir)
+        def maxTaxonHeight = 300
+        def maxTaxonWidth = 260
         if (!cacheDirFile.exists()) cacheDirFile.mkdirs()
 
         //default 1 day cache age
@@ -127,6 +129,24 @@ class GenerateService {
                                 catch (err) {
                                     log.error("Failed to cache the image: ${taxon.largeImageUrl.replace('raw', 'smallRaw')} \nError: ${err.message}")
                                 }
+                            }
+                            try {
+                                BufferedImage bimg = ImageIO.read(new File(cacheDir + taxon.largeImageUrl.replaceAll("[^a-zA-Z0-9\\-\\_\\.]", "") + ".jpg"))
+                                int imgW = bimg.getWidth()
+                                int imgH = bimg.getHeight()
+
+                                if (imgW / (double) imgH > maxTaxonWidth / (double) maxTaxonHeight) {
+                                    // limit by width
+                                    taxon.width = maxTaxonWidth
+                                    taxon.height = imgH / (double) imgW * taxon.width
+                                } else {
+                                    // limit by height
+                                    taxon.height = maxTaxonHeight
+                                    taxon.width = imgW / (double) imgH * taxon.height
+                                }
+                            } catch (Exception exe) {
+                                taxon.width = maxTaxonWidth
+                                taxon.height = maxTaxonHeight
                             }
                             taxon.thumbnail = "cache?id=" + cachedFile.getName()
                         }
@@ -169,9 +189,6 @@ class GenerateService {
 
         def taxonProfilesAll = new JsonSlurper().parseText(text).searchDTOList
         def taxonProfiles = []
-        def maxTaxonHeight = 300
-        def maxTaxonWidth = 260
-        def cacheDir = "${grailsApplication.config.getProperty('fieldguide.store')}/cache/"
 
         //add image metadata
         taxonProfilesAll.each { taxon ->
@@ -181,24 +198,6 @@ class GenerateService {
                     taxon.imageCreator = imageMetadata?.creator
                     taxon.imageDataResourceUid = imageMetadata?.dataResourceUid
                     taxon.imageRights = imageMetadata?.rights
-                    try {
-                        BufferedImage bimg = ImageIO.read(new File(cacheDir + taxon.largeImageUrl.replaceAll("[^a-zA-Z0-9\\-\\_\\.]", "") + ".jpg"))
-                        int imgW = bimg.getWidth()
-                        int imgH = bimg.getHeight()
-
-                        if (imgW / (double) imgH > maxTaxonWidth / (double) maxTaxonHeight) {
-                            // limit by width
-                            taxon.width = maxTaxonWidth
-                            taxon.height = imgH / (double) imgW * taxon.width
-                        } else {
-                            // limit by height
-                            taxon.height = maxTaxonHeight
-                            taxon.width = imgW / (double) imgH * taxon.height
-                        }
-                    } catch (Exception exe) {
-                        taxon.width = maxTaxonWidth
-                        taxon.height = maxTaxonHeight
-                    }
 
                     if (taxon?.imageDataResourceUid) {
                         def imageDataResourceMetadata = collectionsService.getInfo(taxon.imageDataResourceUid)
