@@ -204,7 +204,7 @@ class GenerateService {
                         taxon.imageDataResourceUrl = imageDataResourceMetadata.websiteUrl
                         taxon.imageDataResourceName = imageDataResourceMetadata.name
                     }
-                    if (imageMetadata.recognisedLicence != null) {
+                    if (imageMetadata?.recognisedLicence != null) {
                         taxon.acronym = imageMetadata.recognisedLicence.acronym
                         taxon.acronymUrl = imageMetadata.recognisedLicence.url
                     }
