@@ -77,7 +77,8 @@
                         </g:if>
                         <g:if test="${ taxon.imageCreator }">
                             <h3>Image by: <a
-                                    href="${grailsApplication.config.getProperty('collections.url') + '/public/show/' + taxon.imageDataResourceUid}">${taxon.imageCreator}</a>
+                                    href="${grailsApplication.config.getProperty('collections.url') + '/public/show/' + taxon.imageDataResourceUid}">${taxon.imageCreator}</a>,
+                                     <a href="${taxon.acronymUrl}">${taxon.acronym}</a>
                             </h3>
                         </g:if>
                         <g:if test="${ taxon.imageRights }">
