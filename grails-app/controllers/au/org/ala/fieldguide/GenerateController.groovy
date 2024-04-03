@@ -61,6 +61,13 @@ class GenerateController {
                             description = "User email address",
                             schema = @Schema(implementation = String),
                             required = true
+                    ),
+                    @Parameter(
+                            name = "file",
+                            in = QUERY,
+                            description = "filename of the generated file",
+                            schema = @Schema(implementation = String),
+                            required = false
                     )
             ],
             requestBody = @RequestBody(

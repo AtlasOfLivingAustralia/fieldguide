@@ -10,6 +10,8 @@ import org.apache.commons.io.FileUtils
 import org.apache.commons.lang3.time.DateFormatUtils
 import org.grails.web.json.JSONArray
 import org.grails.web.json.JSONObject
+import javax.imageio.ImageIO
+import java.awt.image.BufferedImage
 
 class GenerateService {
 
@@ -24,7 +26,7 @@ class GenerateService {
 
         //queued downloads already have a fileRef
         if (origFileRef) {
-            id = Long.parseLong(origFileRef.substring(origFileRef.lastIndexOf('e') + 1).replace(".pdf",""))
+            id = Long.parseLong(origFileRef.substring(origFileRef.lastIndexOf('e') + 1).replace(".pdf", ""))
             fileRef = origFileRef
         }
 
@@ -49,7 +51,7 @@ class GenerateService {
 
         Map map = new HashMap()
         map.put("title", json.title ? json.title : "Generated field guide")
-        map.put("link", json.link ? json.link : grailsApplication.config.getProperty('fieldguide.url') + "/guide/" + pdfParam )
+        map.put("link", json.link ? json.link : grailsApplication.config.getProperty('fieldguide.url') + "/guide/" + pdfParam)
         map.put("families", json.sortedTaxonInfo)
         map.put("filename", json.fileRef)
 
@@ -92,6 +94,8 @@ class GenerateService {
     def cacheImages(json) {
         def cacheDir = "${grailsApplication.config.getProperty('fieldguide.store')}/cache/"
         def cacheDirFile = new File(cacheDir)
+        def maxTaxonHeight = 300
+        def maxTaxonWidth = 260
         if (!cacheDirFile.exists()) cacheDirFile.mkdirs()
 
         //default 1 day cache age
@@ -122,9 +126,27 @@ class GenerateService {
                                 try {
                                     FileUtils.copyURLToFile(new URL("${taxon.largeImageUrl.replace('raw', 'smallRaw')}"), cachedFile)
                                 }
-                                catch (err){
+                                catch (err) {
                                     log.error("Failed to cache the image: ${taxon.largeImageUrl.replace('raw', 'smallRaw')} \nError: ${err.message}")
                                 }
+                            }
+                            try {
+                                BufferedImage bimg = ImageIO.read(new File(cacheDir + taxon.largeImageUrl.replaceAll("[^a-zA-Z0-9\\-\\_\\.]", "") + ".jpg"))
+                                int imgW = bimg.getWidth()
+                                int imgH = bimg.getHeight()
+
+                                if (imgW / (double) imgH > maxTaxonWidth / (double) maxTaxonHeight) {
+                                    // limit by width
+                                    taxon.width = maxTaxonWidth
+                                    taxon.height = imgH / (double) imgW * taxon.width
+                                } else {
+                                    // limit by height
+                                    taxon.height = maxTaxonHeight
+                                    taxon.width = imgW / (double) imgH * taxon.height
+                                }
+                            } catch (Exception exe) {
+                                taxon.width = maxTaxonWidth
+                                taxon.height = maxTaxonHeight
                             }
                             taxon.thumbnail = "cache?id=" + cachedFile.getName()
                         }
@@ -163,7 +185,7 @@ class GenerateService {
         String text = new String(post.getResponseBody(), "UTF-8")
 
         //UTF-8 encoding errors removal
-        text = text.replaceAll( "([\\ufffd])", "")
+        text = text.replaceAll("([\\ufffd])", "")
 
         def taxonProfilesAll = new JsonSlurper().parseText(text).searchDTOList
         def taxonProfiles = []
@@ -182,13 +204,17 @@ class GenerateService {
                         taxon.imageDataResourceUrl = imageDataResourceMetadata.websiteUrl
                         taxon.imageDataResourceName = imageDataResourceMetadata.name
                     }
+                    if (imageMetadata?.recognisedLicence != null) {
+                        taxon.acronym = imageMetadata.recognisedLicence.acronym
+                        taxon.acronymUrl = imageMetadata.recognisedLicence.url
+                    }
                 }
                 taxonProfiles.add(taxon)
             }
         }
 
         //group sort bie output
-        def taxonGroupedSorted = taxonProfiles.groupBy (
+        def taxonGroupedSorted = taxonProfiles.groupBy(
                 [{ it.family ? it.family : "" }, { it.commonNameSingle ? it.commonNameSingle : "" }]
         ).sort { a, b ->
             a.key ? b.key ? a.key <=> b.key : 1 : b.key ? -1 : 0

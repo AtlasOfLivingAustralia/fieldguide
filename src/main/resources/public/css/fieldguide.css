@@ -1,16 +1,30 @@
 @page {
     size: 210mm 297mm;
+    color: white;
+
+    @top-center {
+        margin-top: 0px;
+        vertical-align: top;
+        width: 120%;
+        content: element(header) element(page-header);
+        font-family: Roboto,Dialog;
+        margin-bottom: 0px;
+    }
 
     @bottom-center {
         vertical-align: bottom;
         content: element(footer);
         padding-bottom: 10px;
+        font-family: Roboto,Dialog;
     }
-
-    margin-top: 1cm;
-    margin-left: 0cm;
-    margin-right: 0cm;
+    margin-top: 75px;
     margin-bottom: 2cm;
+    margin-right: 0px;
+    margin-left: 0px;
+    page-break-inside: avoid;
+    font-family: Roboto,Dialog;
+
+
 }
 div.footer {
     font-size: 11px;
@@ -18,6 +32,20 @@ div.footer {
     display: block;
     position: running(footer);
     margin-left: 0px;
+    font-family: Roboto,Dialog;
+}
+
+div.page-header {
+    font-size: 11px;
+    display: block;
+    position: running(header);
+    margin-left: 0px;
+}
+div.header {
+    display: block;
+    position: running(header);
+    margin-left: 0px;
+    margin-top: 0px;
 }
 
 #pagenumber:before {
@@ -29,15 +57,15 @@ div.footer {
 }
 
 html * {
-    font-family: Helvetica, Dialog;
-	margin: 0;
+    font-family: Roboto,Dialog;
+	margin-top: 0px;
 }
 
 /* Top link */
 body > a {
     font-style: italic;
     font-size: 14px;
-    color: gray;
+    color: black;
     margin-left: 30px;
     font-weight: bold;
     text-decoration: none;
@@ -45,32 +73,33 @@ body > a {
 
 /* Family */
 div > h2 {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 30px;
+    font-size: 16px;
+    margin-bottom: 5px;
+    font-family: Roboto,Dialog;
 }
 
 /* Common name */
 div > h3 {
-    font-size: 11px;
-    font-weight: bold;
+    font-size: 13px;
+    font-weight: normal;
+    font-family: Roboto,Dialog;
 }
 
 /* Scientific name */
 div > h4 {
-    font-size: 11px;
+    font-size: 8px;
     font-weight: normal;
     font-style: italic;
     margin-bottom: 10px;
+    font-family: Roboto,Dialog;
 }
 
 /* Attribution title */
 body > h1 {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 30px;
+    font-size: 18px;
+    margin-bottom: 10px;
     margin-left: 30px;
-    page-break-before: always;
+    font-family: Roboto,Dialog;
 }
 
 /* Attribution details */
@@ -78,28 +107,129 @@ div > h5 {
     font-size: 11px;
     font-weight: normal;
     margin-top: 4px;
+    font-family: Roboto,Dialog;
 }
 
 /* Attribution links */
 h5 > a {
-    color: blue;
+    color: black;
     text-decoration: underline;
     font-size: 11px;
     font-weight: normal;
     font-style: normal;
     margin-left: 0px;
+    font-family: Roboto,Dialog;
 }
 
-/* taxon images */
-div > img {
-    margin-top: 10px;
+.mainHeader{
+    margin-top: 0px;
+    margin-left: 0px;
+}
+.headerText{
+    font-style: italic;
+    font-weight: bold;
+    margin-left:80px;
+    font-family: Roboto,Dialog;
+}
+.headerLink{
+    color:black;
+    font-family: Roboto,Dialog;
+}
+.secondHeader{
+    float:left;
+    margin-bottom:30px;
+}
+.familyNormal{
+    font-weight: normal;
+    page-break-inside: avoid;
+}
+.h2Species{
+    margin-top:0px;
+    margin-bottom:30px;
+    margin-left:20px;
+    font-weight: normal;
+    font-family: Roboto,Dialog;
+}
+.h2ScientificName{
+    margin-left:20px;
+    margin-bottom:0px;
+    font-weight: normal;
+    font-family: Roboto,Dialog;
+}
+.imgThumbnail{
+    margin-bottom: 10px;
+    margin-left: 20px;
     vertical-align: text-top;
-    margin-left: 30px;
-    width: 35%;
 }
-
-body > div {
+.densityMap{
+    margin-left: 10px;
+    vertical-align: text-top;
+}
+.densityLegend{
+    width:100px;
+    margin-left: 0px;
+    vertical-align: text-top;
+}
+.attHeader{
+    float:left;
+    margin-bottom:20px;
+}
+.attDiv{
+    margin-left:10px;
+    margin-bottom: 150px;
+    margin-top: 200px;
+}
+.h1Attr{
+    margin-left:50px;
+    page-break-before: always;
+    margin-top: 10px;
+    page-break-inside: avoid;
+    font-family: Roboto,Dialog;
+}
+.attrAttributeDiv{
+    margin-top: 25px;
+    margin-left: 60px;
+    margin-bottom: 20px;
+    page-break-inside: avoid;
+}
+.taxonDiv{
+    margin-top:10px;
+    width:90%;
+    margin-left:50px;
+    margin-bottom:50px;
+    page-break-inside: avoid;
+}
+.footerDiv{
     margin-top: 15px;
     margin-left: 30px;
-    page-break-inside: avoid;
+    font-family: Roboto,Dialog;
+}
+.alaSite{
+    float:left;
+    margin-left:20px;
+    font-family: Roboto,Dialog;
+}
+.pageNum{
+    float:right;
+    margin-right:10px;
+    font-family: Roboto,Dialog;
+}
+.bodyClass{
+    margin-top: 70px;
+    margin-left: 0px;
+    font-family: Roboto,Dialog;
+}
+.headerImg{
+    margin-bottom: 5px;
+    margin-top: 0px;
+}
+.classBlack{
+    color: black;
+}
+.upper{
+    text-transform: uppercase;
+}
+.hrClass{
+    color:gray;
+    border-width:0.5px;
 }

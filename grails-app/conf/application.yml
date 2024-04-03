@@ -10,6 +10,7 @@ fieldguide.store: /data/fieldguide/store
 collections.url: 'https://collections.ala.org.au'
 collections.ws.url: 'https://collections.ala.org.au/ws'
 image.ws.url: 'https://images.ala.org.au/ws'
+fieldguide.species.url: 'https://bie.ala.org.au/species'
 
 threadPoolSize: 4
 
