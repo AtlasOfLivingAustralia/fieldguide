@@ -14,16 +14,6 @@ plugins {
     id "com.gorylenko.gradle-git-properties" version "2.4.1"
 }
 
-bootWar {
-    launchScript()
-    dependsOn(compileGroovyPages)
-}
-
-war {
-    enabled=true
-    dependsOn(compileGroovyPages)
-}
-
 springBoot {
     mainClass = "au.org.ala.fieldguide.Application"
 }
@@ -132,12 +122,17 @@ publishing {
     }
     publications {
         mavenJar(MavenPublication) {
-            artifact bootWar
+            artifact bootJar
         }
     }
 }
 
 bootWar {
+    enabled = false
+}
+
+bootJar {
+    enabled = true
+    classifier = 'exec'
     launchScript()
-    dependsOn(compileGroovyPages)
 }
