@@ -9,7 +9,6 @@ plugins {
     id "org.grails.grails-web"
     id "org.grails.grails-gsp"
     id "application"
-    id "war"
     id "maven-publish"
     id "com.gorylenko.gradle-git-properties" version "2.4.1"
 }
@@ -96,6 +95,8 @@ dependencies {
     implementation "org.grails.plugins:ala-ws-plugin:$alaSecurityLibsVersion"
 
     implementation 'org.grails.plugins:aws-sdk-s3:2.4.8'
+
+    implementation 'com.bertramlabs.plugins:asset-pipeline-grails:3.4.6'
 }
 
 bootRun {
@@ -125,10 +126,6 @@ publishing {
             artifact bootJar
         }
     }
-}
-
-bootWar {
-    enabled = false
 }
 
 bootJar {
